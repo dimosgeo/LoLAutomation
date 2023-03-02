@@ -78,7 +78,7 @@ def getQueueName(url):
 		return 'other'
 	queues = url+"/lol-game-data/assets/v1/queues.json"
 	queues = requests.get(queues, verify=False).json()
-	return queues[queue]["shortName"].lower()
+	return queues[str(queue)]["shortName"].lower()
 
 def getQueueSpecialName(url):
 	queue = getQueueName(url)
