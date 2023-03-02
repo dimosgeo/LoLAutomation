@@ -5,16 +5,17 @@ from PIL import Image, ImageTk
 
 
 class ChampionFrame(Frame):
-	def __init__(self, parent: Widget, width: float = 0, size: float = 0, name_size: int = 26, spell_size: int = 65, horizontal_spacing: int = 15, *args, **kwargs) -> None:
+	def __init__(self, parent: Widget, width: float = 0, size: float = 0, backend=None,  name_size: int = 26, spell_size: int = 65, horizontal_spacing: int = 15, *args, **kwargs) -> None:
 		Frame.__init__(self, parent, *args, **kwargs)
 		self.width = width
 		self.spell_size = spell_size
+		self.backend = backend
 		self.height = size
 		self.spacing = Spacing(horizontal=horizontal_spacing)
 		self.champion_icon = None
 		self.champion_name = Label(self, text='', font=Font(family="Helvetica", size=name_size, weight="bold"), background=self['bg'], foreground='white', anchor='w')
 		self.champion_image = Button(self, background=self['bg'], activebackground=self['bg'], bd=0)
-		self.summonerSpellsFrame = SummonerSpellFrame(self, size=self.spell_size, background=self['bg'])
+		self.summonerSpellsFrame = SummonerSpellFrame(self, backend, size=self.spell_size, background=self['bg'])
 
 	def set_champion(self, name, image):
 		self.champion_icon = ImageTk.PhotoImage(Image.open(image).resize((int(self.height), int(self.height))))
@@ -32,10 +33,11 @@ class ChampionFrame(Frame):
 
 
 class SummonerSpellFrame(Frame):
-	def __init__(self, parent, size, horizontal_spacing=25, *args, **kwargs) -> None:
+	def __init__(self, parent, backend, size, horizontal_spacing=25, *args, **kwargs) -> None:
 		Frame.__init__(self, parent, *args, **kwargs)
 		self.spacing = Spacing(horizontal=horizontal_spacing)
 		self.height = size
+		self.backend = backend
 		self.images = []
 		self.spells = [Button(self, bd=0), Button(self, bd=0)]
 		self.swap_button_size = 20
@@ -57,7 +59,7 @@ class SummonerSpellFrame(Frame):
 
 	def swap_spells(self) -> None:
 		if hasattr(self.winfo_toplevel(), 'backend'):
-			self.winfo_toplevel().backend.swap_spells()
+			self.backend.swap_spells()
 		self.images = self.images[::-1]
 		for spell, image in zip(self.spells, self.images):
 			spell['image'] = image

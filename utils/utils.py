@@ -9,17 +9,8 @@ gray_array = np.array([0.3, 0.59, 0.11])
 
 def grayscale(img):
     img = np.array(img, dtype='uint8')
-    img[:,:, :3] = np.sum(img[:,:, :3] * gray_array, axis=-1, keepdims=True) / 3
+    img[:, :, :3] = np.sum(img[:, :, :3] * gray_array, axis=-1, keepdims=True) / 3
     return Image.fromarray(img)
-
-
-def darken(img, amount: float):
-    img = np.array(img, dtype='uint8')
-    img[:,:,1] -= amount
-    return Image.fromarray(img)
-
-
-message_types: list = ['GAME_OPENED', 'GAME_CLOSED', 'CHAMPION_PICKED']
 
 
 @dataclass

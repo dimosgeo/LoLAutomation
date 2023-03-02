@@ -17,7 +17,7 @@ class Build(tk.Frame):
 		self.spacing = Spacing(vertical=vertical_space, horizontal=horizontal_space)
 
 		self.rune_sheet = RuneSheet(self, self.backend.get_runes(), background=utils.background_color, vertical_space=10, highlightthickness=2)
-		self.champion_frame = ChampionFrame(self, width=self.rune_sheet.width, size=champion_frame_size, background=self['bg'])
+		self.champion_frame = ChampionFrame(self, width=self.rune_sheet.width, size=champion_frame_size, backend=self.backend, background=self['bg'])
 		self.data = ControlFrame(self, lane_navigation=self.backend.navigation_icons['lane_navigation'], width=self.rune_sheet.width, font_size=control_bar_font_size, func=self.select_lane, background=self['bg'])
 		
 		self.abilities = AbilitiesTable(self, cell_size=(self.rune_sheet.width - ability_cell_size) / 19, border_size=2)

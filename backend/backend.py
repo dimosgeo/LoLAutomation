@@ -41,7 +41,6 @@ class Backend:
     def get_runes(self):
         return lolib.getFullRunePageImages(self.url)
 
-    # TODO
     def swap_spells(self) -> None:
         self.primary_spell_f = not self.primary_spell_f
         print('swapped')
@@ -54,13 +53,12 @@ class Backend:
         self.navigation_icons['lane_navigation']['bot'] = {'enabled': 'images/bot.png', 'disabled': 'images/bot_disabled.png'}
         self.navigation_icons['lane_navigation']['support'] = {'enabled': 'images/support.png', 'disabled': 'images/support_disabled.png'}
 
-    # TODO
     def get_build(self):
-        def BuildByLane(page, championInfo, queueName, championAlias, laneSpecialNane):
+        def BuildByLane(page, queueName):
             build = ds.get_build(page, queue=queueName)
             if not build['exists']:
-                return False,{}
-            championLane = {}
+                return False, {}
+            championLane = dict()
             championLane['spells'] = [lolib.getImageFromUrl(self.url, self.allSpells[build['spells'][i]]['iconPath']) for i in range(2)]
             championLane['ability_order'] = build['abilities_order']
             championLane['runes'] = self.get_rune_mapping(build['runes'])
@@ -69,65 +67,25 @@ class Backend:
             championLane['pr'] = build['pr']
             championLane['br'] = build['br']
 
-            # championLane['Sspells'] = build['spells']
-            # championLane['Srunes'] = build['runes']
-            # championLane['Sitems'] = [build['start_items'], build['best_items']]
             return True, championLane, build
 
         champion_info = lolib.getChampionInfo(self.url, self.champion_id)
         queueName = lolib.getQueueSpecialName(self.url)
 
-        champion = {}
+        champion = dict()
         champion['build'] = {}
         champion['name'] = champion_info['name']
         champion['image'] = champion_info['iconPath']
         champion['abilities'] = [ability for ability in lolib.getAbilitiesIcons(self.url, self.champion_id)]
 
         lanes = ['top', 'jungle', 'mid', 'bot', 'support', '']
-        start = time.time()
         pages = ds.load_pages(champion_info['alias'], queueName, lanes)
-        print([len(page) for page in pages])
-        print('load time:', time.time() - start)
         for lane in lanes[:-1]:
-            exists, championLane, build = BuildByLane(pages[lane], champion_info, queueName, champion_info['alias'], lane)
-            if(exists):
+            exists, championLane, build = BuildByLane(pages[lane], queueName)
+            if exists:
                 champion['build'][lane] = [championLane, build]
 
         champion['default_lane'] = ds.getDefaultLane(pages[''])
-        print('total', time.time() - start)
-        # champion['name'] = champion_info['name']
-        # champion['image'] = champion_info['iconPath']
-        # champion['abilities'] = [ability for ability in lolib.getAbilitiesIcons(self.url,champion_info['cid'])]
-        # champion['build'] = {}
-        # champion['build'][build['lane']] = {}
-        # champion['build'][build['lane']]['spells'] = [self.allSpells[build['spells'][i]]['iconPath'] for i in range(2)]
-        # champion['build'][build['lane']]['ability_order'] = build['abilities_order']
-        # champion['build'][build['lane']]['runes'] = self.runes2index(build)
-        # champion['build'][build['lane']]['items'] = [[{'image':self.allItems[item]['iconPath']} for item in build['start_items']],[{'image':self.allItems[item]['iconPath']} for item in build['best_items']]]
-        # champion['build'][build['lane']]['wr'] = build['wr']
-        # champion['build'][build['lane']]['pr'] = build['pr']
-        # champion['build'][build['lane']]['br'] = build['br']
-
-        # champion['abilities'] = ['images/TwitchFullAutomatic.png' for _ in range(5)]
-        # champion['name'] = 'Kennen'
-        # champion['image'] = 'images/Kennen_0.jpg'
-        # champion['abilities'] = ['images/TwitchFullAutomatic.png' for _ in range(5)]
-        # champion['build']['top']['spells'] = ['images/SummonerHeal.png', 'images/SummonerHeal.png']
-        # champion['build']['top']['ability_order'] = [1, 2, 3, 1, 1, 4, 1, 2, 1, 2, 4, 2, 2, 3, 3, 4, 3, 3]
-        # champion['build']['top']['runes'] = [[0, 1, 1, 1, 1], [1, -1, 1, 1, 1], [0, 0, 0]]
-        # champion['build']['top']['items'] = [[{'image':'images/1001.png', 'description': 'makaronia'} for _ in range(3)], [{'image':'images/1001.png'} for _ in range(6)]]
-        # champion['build']['top']['wr'] = 55.5
-        # champion['build']['top']['pr'] = 12.1
-        # champion['build']['top']['br'] = 5
-        # champion['build']['bot'] = {}
-        # champion['build']['bot']['spells'] = ['images/SummonerMana.png', 'images/SummonerMana.png']
-        # champion['build']['bot']['ability_order'] = [2, 1, 3, 1, 1, 4, 1, 2, 1, 2, 4, 2, 2, 3, 3, 4, 3, 3]
-        # champion['build']['bot']['runes'] = [[1, 2, 2, 2, 2], [0, 2, 2, 2, 2], [0, 0, 0]]
-        # champion['build']['bot']['items'] = [[{'image':'images/7008.png'} for _ in range(3)], [{'image':'images/7008.png'} for _ in range(6)]]
-        # champion['build']['bot']['wr'] = 55.5
-        # champion['build']['bot']['pr'] = 12.1
-        # champion['build']['bot']['br'] = 5
-        # champion['default_lane'] = 'top'
         return champion
 
     def get_item_image(self, item):
@@ -173,7 +131,6 @@ class Backend:
                 else:
                     result[data[0]] = data[1]
             complete_runes.append(result)
-        # print(complete_runes)
         return complete_runes
 
     def set_everything(self, champion):

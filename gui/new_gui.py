@@ -6,7 +6,7 @@ from backend import Backend
 from lolwidgets import Spacing, Padding, Build, PingLabel, MyScrollBar
 from threading import Thread
 from PIL import Image, ImageTk
-import regex_engine
+
 
 class App(Tk):
 	def __init__(self):
@@ -16,13 +16,14 @@ class App(Tk):
 		self.protocol("WM_DELETE_WINDOW", self.on_closing)
 		self.configure(bg=utils.background_color)
 		self.bind("<Configure>", self.events_handler)
-		# self.resizable(width=True, height=False)
+		self.resizable(width=False, height=False)
 
 		self.icon = ImageTk.PhotoImage(Image.open('images/icon.png'))
 		self.iconbitmap(default='images/icon.png')
 		self.backend = Backend()
 		self.build = None
 		self.scrollbar = None
+		self.navigation_images = None
 
 		self.spacing = Spacing(vertical=20, horizontal=20)
 		self.padding = Padding(top=0, left=20, right=20, bottom=20)
@@ -49,9 +50,7 @@ class App(Tk):
 	def add_build(self):
 		self.navigation_images = self.backend.get_navigation_icons()
 		self.build = Build(self, backend=self.backend, background=utils.background_color)
-		# self.build.place(self.padding.left, self.padding.top)  # REMOVE
 		self.scrollbar = MyScrollBar(self, width=16, background=utils.background_color, child_w=self.build)
-		# self.scrollbar.place()
 
 	def get_ping(self):
 		self.ping['text'] = self.backend.ping()
