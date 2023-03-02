@@ -79,10 +79,6 @@ def getQueueName(url):
 	queues = url+"/lol-game-data/assets/v1/queues.json"
 	queues = requests.get(queues, verify=False).json()
 	return queues[str(queue)]["shortName"].lower()
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 
 def getQueueSpecialName(url):
 	queue = getQueueName(url)
