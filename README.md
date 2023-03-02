@@ -8,7 +8,7 @@ All information is supplied by METAsrc. A lot of helpful information is availabl
 
 ## Setup and Prerequisites
 ### Python
-Users must already have Python installed on their systems in order for this app to function properly. A few libraries are also necessary for effective operation.
+Users must already have Python installed on their systems in order for this app to function properly. A few libraries are also necessary for effective operation. The file ```requirements.txt``` contains the necessary libraries. To install them, execute ```pip install -r requirements.txt``` on the terminal. 
 
 ### League of Legends
 The tool that we provide, helps users to import runes, spells and item sets in the game automatically. To do so, the user need to make some changings into the game.
