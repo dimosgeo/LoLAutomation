@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4fe1834a-fe34-4db1-855a-6fc0d1393f01" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/backend/LoLAutomationLib.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/LoLAutomationLib.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/backend.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/data_scrape.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/data_scrape.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui/new_gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui/new_gui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lolwidgets/build.py" beforeDir="false" afterPath="$PROJECT_DIR$/lolwidgets/build.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lolwidgets/championcard.py" beforeDir="false" afterPath="$PROJECT_DIR$/lolwidgets/championcard.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.py" afterDir="false" />
-    </list>
+    <list default="true" id="4fe1834a-fe34-4db1-855a-6fc0d1393f01" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
