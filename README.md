@@ -21,4 +21,4 @@ To execute the app you must run ```python main.py```. After that, LoLAutomation 
 ## Contact
 Georgoulas Dimosthenis - dimosgeo99@gmail.com
 
-Papanikolaou Nikolaos
+Papanikolaou Nikolaos - nickp3065@gmail.com
