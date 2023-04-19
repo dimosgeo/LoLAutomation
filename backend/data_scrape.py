@@ -35,7 +35,7 @@ def get_runes(tree, data_dict):
 
 
 def get_abilities(tree, data_dict):
-	abilities_page = tree.xpath('//*[@id="inner-content"]/div[1]/div[2]/div[2]/div[2]/div/table')[0].getchildren()[1:]
+	abilities_page = tree.xpath('//*[@id="page-content"]/div[2]/div[2]/div[2]/div/table')[0].getchildren()[1:]
 	data_dict["abilities_order"] = [0 for _ in range(18)]
 	for i in range(1, 19):
 		for row in abilities_page:
@@ -50,18 +50,16 @@ def get_abilities(tree, data_dict):
 
 
 def get_items(tree, data_dict):
-	start_items = tree.xpath('//*[@id="inner-content"]/div[1]/div[1]/div[2]/div/div/div[1]/div[2]/div[1]/div')[0].getchildren()
+	start_items = tree.xpath('//*[@id="page-content"]/div[1]/div[2]/div/div/div[1]/div[2]/div[1]/div')[0].getchildren()
 	data_dict["start_items"] = []
 	for item in start_items:
 		if item.__len__() != 0:
-			if item.values()[0] != " _2kdnf4":
-				data_dict["start_items"].append(int(item.getchildren()[0].values()[1].split("-")[-1]))
-			else:
-				for _ in range(int(item.getchildren()[0].text_content())-1):
-					data_dict["start_items"].append(data_dict["start_items"][-1])	
+			if item.values()[0] == " _2kdnf4":
+				continue
+			data_dict["start_items"].append(int(item.getchildren()[0].values()[1].split("-")[-1]))
 
 	data_dict["best_items"] = []
-	best_items = tree.xpath('//*[@id="inner-content"]/div[1]/div[2]/div[2]/div[1]/div/div/div[1]')[0].getchildren()
+	best_items = tree.xpath('//*[@id="page-content"]/div[2]/div[2]/div[1]/div/div/div[1]')[0].getchildren()
 	for item in best_items:
 		data_dict["best_items"].append(int(item.getchildren()[0].values()[1].split("-")[-1]))
 
@@ -140,7 +138,7 @@ async def create_page_tasks(queue_name='5v5', champion_name='aatrox', lanes=('to
 
 def main():
 	result = load_pages()
-	print(len(result))
+	print(get_build(result['bot']))
 
 
 if __name__ == '__main__':
