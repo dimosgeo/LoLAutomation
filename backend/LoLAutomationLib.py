@@ -163,7 +163,6 @@ def updateItemSet(url, start_items, best_items, title='AUTOSET'):
 
 
 def setSpells(url, spells):
-	print(spells)
 	path = url+"/lol-champ-select/v1/session/my-selection"
 	requests.patch(path, verify=False, json={"spell1Id": spells[0], "spell2Id": spells[1]})
 
@@ -225,7 +224,6 @@ def getCurrentchampion(server_url):
 def getChampionInfo(url, cid):
 	path = url+"/lol-game-data/assets/v1/champions/"+str(cid)+".json"
 	r = requests.get(path, verify=False).json()
-	print(r)
 	name = r["name"]
 	alias = r["alias"].lower()
 	icon_path = getImageFromUrl(url, r["squarePortraitPath"])
