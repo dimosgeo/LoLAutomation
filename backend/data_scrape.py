@@ -5,7 +5,8 @@ import platform
 
 
 def get_lane(tree):
-	lane = tree.xpath('//*[@id="splash-content"]/div[1]/div/div/div[2]/h1/span[2]')[0].text_content().strip().split(" ")[0].lower()
+	# lane = tree.xpath('//*[@id="splash-content"]/div[1]/div/div/div[2]/h1/span[2]')[0].text_content().strip().split(" ")[0].lower()
+	lane = tree.xpath('//*[@id="splash-content"]/div[1]/div/div/div/div[2]/h1/span[2]')[0].text_content().strip().split(" ")[0].lower()
 	return 'top' if lane == 'lol' else lane
 
 
@@ -138,7 +139,7 @@ async def create_page_tasks(queue_name='5v5', champion_name='aatrox', lanes=('to
 
 def main():
 	result = load_pages()
-	print(get_build(result['bot']))
+	print(get_build(result['top']))
 
 
 if __name__ == '__main__':
