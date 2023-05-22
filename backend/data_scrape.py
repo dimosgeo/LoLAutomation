@@ -67,17 +67,17 @@ def get_items(tree, data_dict):
 
 def get_rates(tree, data_dict, queue):
 	if queue == '5v5':
-		data_dict['wr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/div[1]/span[2]/span')[0].text_content()[:-1])
-		data_dict['pr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/div[1]/span[4]/span')[0].text_content()[:-1])
-		data_dict['br'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/div[1]/span[5]/span')[0].text_content()[:-1])
+		data_dict['wr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[2]/span')[0].text_content()[:-1])
+		data_dict['pr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[4]/span')[0].text_content()[:-1])
+		data_dict['br'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[5]/span')[0].text_content()[:-1])
 	elif queue == 'aram':
-		data_dict['wr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/div[1]/span[2]/span')[0].text_content()[:-1])
-		data_dict['pr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/div[1]/span[3]/span')[0].text_content()[:-1])
+		data_dict['wr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[2]/span')[0].text_content()[:-1])
+		data_dict['pr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[3]/span')[0].text_content()[:-1])
 		data_dict['br'] = 0
 	elif queue == 'urf':
-		data_dict['wr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/div[1]/span[2]/span')[0].text_content()[:-1])
-		data_dict['pr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/div[1]/span[3]/span')[0].text_content()[:-1])
-		data_dict['br'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/div[1]/span[4]/span')[0].text_content()[:-1])
+		data_dict['wr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[2]/span')[0].text_content()[:-1])
+		data_dict['pr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[3]/span')[0].text_content()[:-1])
+		data_dict['br'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[4]/span')[0].text_content()[:-1])
 	else:
 		data_dict['wr'] = 0
 		data_dict['pr'] = 0
