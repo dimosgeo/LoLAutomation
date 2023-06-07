@@ -27,11 +27,11 @@ class App(Tk):
 
 		self.spacing = Spacing(vertical=20, horizontal=20)
 		self.padding = Padding(top=0, left=20, right=20, bottom=20)
-		self.height = 980
-		self.width = 735
 
 		screenwidth = self.winfo_screenwidth()
 		screenheight = self.winfo_screenheight()
+		self.height = int(screenheight * 0.8)
+		self.width = 1500 #735
 		alignstr = f'{self.width}x{self.height}+{(screenwidth - self.width) // 2}+{(screenheight - self.height) // 2}'
 
 		self.geometry(alignstr)

@@ -17,15 +17,15 @@ class Build(tk.Frame):
 		self.spacing = Spacing(vertical=vertical_space, horizontal=horizontal_space)
 
 		self.rune_sheet = RuneSheet(self, self.backend.get_runes(), background=utils.background_color, vertical_space=10, highlightthickness=2)
-		self.champion_frame = ChampionFrame(self, width=self.rune_sheet.width, size=champion_frame_size, backend=self.backend, background=self['bg'])
+		self.width = self.rune_sheet.width + (ability_cell_size + 2) * 19 + 22
+		self.champion_frame = ChampionFrame(self, width=self.width, size=champion_frame_size, backend=self.backend, background=self['bg'])
 		self.data = ControlFrame(self, lane_navigation=self.backend.navigation_icons['lane_navigation'], width=self.rune_sheet.width, font_size=control_bar_font_size, func=self.select_lane, background=self['bg'])
 		
 		self.abilities = AbilitiesTable(self, cell_size=(self.rune_sheet.width - ability_cell_size) / 19, border_size=2)
 		self.starting_items = ItemBuildFrame(self, self.rune_sheet.width, height=item_size, background=self['bg'])
 		self.full_build = ItemBuildFrame(self, self.rune_sheet.width, height=item_size, background=self['bg'])
 
-		self.height = self.champion_frame.height + self.data.height + self.rune_sheet.height + self.abilities.height + self.starting_items.height + self.full_build.height + 6 * vertical_space
-		self.width = self.rune_sheet.width
+		self.height = self.champion_frame.height + self.data.height + self.rune_sheet.height + 4 * vertical_space#+ self.abilities.height + self.starting_items.height + self.full_build.height + 6 * vertical_space
 		self.previous_selected = ''
 	
 	def set_champion(self, champion) -> None:
@@ -57,12 +57,12 @@ class Build(tk.Frame):
 		self.data.place(x=0, y=y)
 		y += self.data.height  # + self.vertical_space // 2
 		self.rune_sheet.place(x=0, y=y)
-		y += self.rune_sheet.height + self.spacing.vertical
-		self.abilities.place(x=0, y=y)
+		# y += self.rune_sheet.height + self.spacing.vertical
+		self.abilities.place(x=self.spacing.horizontal + self.rune_sheet.width, y=y)
 		y += self.abilities.height + self.spacing.vertical
-		self.starting_items.place(x=0, y=y)
+		self.starting_items.place(x=self.spacing.horizontal + self.rune_sheet.width, y=y)
 		y += self.starting_items.height + self.spacing.vertical
-		self.full_build.place(x=0, y=y)
+		self.full_build.place(x=self.spacing.horizontal + self.rune_sheet.width, y=y)
 
 	def place_forget(self) -> None:
 		super().place_forget()
