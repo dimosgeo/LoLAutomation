@@ -5,8 +5,7 @@ import platform
 
 
 def get_lane(tree):
-	# lane = tree.xpath('//*[@id="splash-content"]/div[1]/div/div/div[2]/h1/span[2]')[0].text_content().strip().split(" ")[0].lower()
-	lane = tree.xpath('//*[@id="splash-content"]/div[1]/div/div/div/div[2]/h1/span[2]')[0].text_content().strip().split(" ")[0].lower()
+	lane = tree.xpath('//*[@id="splash-content"]/div[1]/div/div/div/div[2]/div/h1/span[2]/span[1]')[0].text_content().strip().split(" ")[0].lower()
 	return 'top' if lane == 'lol' else lane
 
 
@@ -36,7 +35,7 @@ def get_runes(tree, data_dict):
 
 
 def get_abilities(tree, data_dict):
-	abilities_page = tree.xpath('//*[@id="page-content"]/div[2]/div[2]/div[2]/div/table')[0].getchildren()[1:]
+	abilities_page = tree.xpath('//*[@id="page-content"]/div[2]/div[2]/section[2]/div/div/table')[0].getchildren()[1:]
 	data_dict["abilities_order"] = [0 for _ in range(18)]
 	for i in range(1, 19):
 		for row in abilities_page:
@@ -51,7 +50,7 @@ def get_abilities(tree, data_dict):
 
 
 def get_items(tree, data_dict):
-	start_items = tree.xpath('//*[@id="page-content"]/div[1]/div[2]/div/div/div[1]/div[2]/div[1]/div')[0].getchildren()
+	start_items = tree.xpath('//*[@id="page-content"]/div[1]/div[2]/section/div/div/div[1]/div[2]/div[1]/div')[0].getchildren()
 	data_dict["start_items"] = []
 	for item in start_items:
 		if item.__len__() != 0:
@@ -60,24 +59,24 @@ def get_items(tree, data_dict):
 			data_dict["start_items"].append(int(item.getchildren()[0].values()[1].split("-")[-1]))
 
 	data_dict["best_items"] = []
-	best_items = tree.xpath('//*[@id="page-content"]/div[2]/div[2]/div[1]/div/div/div[1]')[0].getchildren()
+	best_items = tree.xpath('//*[@id="page-content"]/div[2]/div[2]/section[1]/div/div/div/div[1]')[0].getchildren()
 	for item in best_items:
 		data_dict["best_items"].append(int(item.getchildren()[0].values()[1].split("-")[-1]))
 
 
 def get_rates(tree, data_dict, queue):
 	if queue == '5v5':
-		data_dict['wr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[2]/span')[0].text_content()[:-1])
-		data_dict['pr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[4]/span')[0].text_content()[:-1])
-		data_dict['br'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[5]/span')[0].text_content()[:-1])
+		data_dict['wr'] = float(tree.xpath('//*[@id="splash-content"]/div[2]/span/div/span[2]/span')[0].text_content()[:-1])
+		data_dict['pr'] = float(tree.xpath('//*[@id="splash-content"]/div[2]/span/div/span[4]/span')[0].text_content()[:-1])
+		data_dict['br'] = float(tree.xpath('//*[@id="splash-content"]/div[2]/span/div/span[5]/span')[0].text_content()[:-1])
 	elif queue == 'aram':
-		data_dict['wr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[2]/span')[0].text_content()[:-1])
-		data_dict['pr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[3]/span')[0].text_content()[:-1])
+		data_dict['wr'] = float(tree.xpath('//*[@id="splash-content"]/div[2]/span/div/span[2]/span')[0].text_content()[:-1])
+		data_dict['pr'] = float(tree.xpath('//*[@id="splash-content"]/div[2]/span/div/span[3]/span')[0].text_content()[:-1])
 		data_dict['br'] = 0
 	elif queue == 'urf':
-		data_dict['wr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[2]/span')[0].text_content()[:-1])
-		data_dict['pr'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[3]/span')[0].text_content()[:-1])
-		data_dict['br'] = float(tree.xpath('//*[@id="splash-content"]/div[3]/span/div/span[4]/span')[0].text_content()[:-1])
+		data_dict['wr'] = float(tree.xpath('//*[@id="splash-content"]/div[2]/span/div/span[2]/span')[0].text_content()[:-1])
+		data_dict['pr'] = float(tree.xpath('//*[@id="splash-content"]/div[2]/span/div/span[3]/span')[0].text_content()[:-1])
+		data_dict['br'] = float(tree.xpath('//*[@id="splash-content"]/div[2]/span/div/span[4]/span')[0].text_content()[:-1])
 	else:
 		data_dict['wr'] = 0
 		data_dict['pr'] = 0
@@ -136,11 +135,6 @@ async def create_page_tasks(queue_name='5v5', champion_name='aatrox', lanes=('to
 	tasks = [asyncio.create_task(load_page(queue_name, champion_name, lane)) for lane in lanes]
 	return await asyncio.gather(*tasks)
 
-
-def main():
+if __name__ == '__main__':
 	result = load_pages()
 	print(get_build(result['top']))
-
-
-if __name__ == '__main__':
-	main()
