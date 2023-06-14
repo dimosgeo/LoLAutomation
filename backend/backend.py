@@ -62,7 +62,7 @@ class Backend:
             championLane['spells'] = [lolib.getImageFromUrl(self.url, self.allSpells[build['spells'][i]]['iconPath']) for i in range(2)]
             championLane['ability_order'] = build['abilities_order']
             championLane['runes'] = self.get_rune_mapping(build['runes'])
-            # championLane['items'] = [[{'image': self.get_item_image(item), 'description': item} for item in build['start_items']], [{'image': self.get_item_image(item), 'description': item} for item in build['best_items']]]
+            # championLane['items'] = [[{'image': self.get_item_image(item), 'description': item} for item in build['start_items']], [{'image': self.get_item_image(item), 'description': item} for item in build['best_items']]] # TEST
             championLane['items'] = [[{'image': self.get_item_image(item)} for item in build['start_items']], [{'image': self.get_item_image(item)} for item in build['best_items']]]
             championLane['wr'] = build['wr']
             championLane['pr'] = build['pr']
@@ -71,8 +71,8 @@ class Backend:
             return True, championLane, build
 
         champion_info = lolib.getChampionInfo(self.url, self.champion_id)
-        # queueName = lolib.getQueueSpecialName(self.url)
-        queueName = ''
+        queueName = lolib.getQueueSpecialName(self.url)
+        # queueName = '' # TEST
 
         champion = dict()
         champion['build'] = {}

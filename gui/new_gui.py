@@ -69,10 +69,10 @@ class App(Tk):
 				break
 			if status == 'GAME_OPENED':
 				self.status_label['text'] = 'Waiting for champion pick.'
-				self.show_message_label()
 				self.add_build()
-				self.backend.champion_id = 84 # REMOVE
-				self.load_data() # REMOVE
+				self.show_message_label()
+				# self.backend.champion_id = 84 # TEST
+				# self.load_data() # TEST
 			if status == 'CHAMPION_PICKED':
 				self.status_label.place_forget()
 				self.load_data()
