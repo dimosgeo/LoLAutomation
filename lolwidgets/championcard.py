@@ -7,6 +7,8 @@ from PIL import Image, ImageTk
 class ChampionFrame(Frame):
 	def __init__(self, parent: Widget, width: float = 0, size: float = 0, backend=None,  name_size: int = 26, spell_size: int = 65, horizontal_spacing: int = 15, *args, **kwargs) -> None:
 		Frame.__init__(self, parent, *args, **kwargs)
+		# self['highlightbackground'] = "blue" # REMOVE
+		# self['highlightthickness'] = 2 # REMOVE
 		self.width = width
 		self.spell_size = spell_size
 		self.backend = backend
@@ -27,9 +29,9 @@ class ChampionFrame(Frame):
 
 	def place(self, x=0, y=0):
 		super().place(x=x, y=y, width=self.width, height=self.height + 10)
-		self.champion_image.place(x=5, y=5, width=self.height, height=self.height)
-		self.champion_name.place(x=self.height + self.spacing.horizontal, y=5, height=self.height, width=340)
-		self.summonerSpellsFrame.place(x=self.width - self.summonerSpellsFrame.width, y=(self.height - self.summonerSpellsFrame.height)/2)
+		self.champion_image.place(x=self.spacing.horizontal + 5, y=5, width=self.height, height=self.height)
+		self.champion_name.place(x=self.height + self.spacing.horizontal * 2, y=5, height=self.height, width=340)
+		self.summonerSpellsFrame.place(x=self.width - self.summonerSpellsFrame.width - self.spacing.horizontal - 5, y=(self.height - self.summonerSpellsFrame.height)/2)
 
 
 class SummonerSpellFrame(Frame):

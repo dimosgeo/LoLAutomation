@@ -28,11 +28,11 @@ class App(Tk):
 		self.spacing = Spacing(vertical=20, horizontal=20)
 		self.padding = Padding(top=0, left=20, right=20, bottom=20)
 
-		screenwidth = self.winfo_screenwidth()
-		screenheight = self.winfo_screenheight()
-		self.height = int(screenheight * 0.8)
-		self.width = 1500 #735
-		alignstr = f'{self.width}x{self.height}+{(screenwidth - self.width) // 2}+{(screenheight - self.height) // 2}'
+		self.screenwidth = self.winfo_screenwidth()
+		self.screenheight = self.winfo_screenheight()
+		self.height = int(self.screenheight * 0.8)
+		self.width = 735
+		alignstr = f'{self.width}x{self.height}+{(self.screenwidth - self.width) // 2}+{(self.screenheight - self.height) // 2}'
 
 		self.geometry(alignstr)
 		self.wm_iconphoto(False, self.icon)
@@ -50,6 +50,9 @@ class App(Tk):
 	def add_build(self):
 		self.navigation_images = self.backend.get_navigation_icons()
 		self.build = Build(self, backend=self.backend, background=utils.background_color)
+		self.width = self.build.width
+		alignstr = f'{self.width}x{self.height}+{(self.screenwidth - self.width) // 2}+{(self.screenheight - self.height) // 2}'
+		self.geometry(alignstr)
 		self.scrollbar = MyScrollBar(self, width=16, background=utils.background_color, child_w=self.build)
 
 	def get_ping(self):
@@ -68,6 +71,8 @@ class App(Tk):
 				self.status_label['text'] = 'Waiting for champion pick.'
 				self.show_message_label()
 				self.add_build()
+				self.backend.champion_id = 84 # REMOVE
+				self.load_data() # REMOVE
 			if status == 'CHAMPION_PICKED':
 				self.status_label.place_forget()
 				self.load_data()
@@ -84,7 +89,7 @@ class App(Tk):
 	def events_handler(self, event):
 		if event.widget == self and (self.winfo_width() != self.width or self.winfo_height() != self.height):
 			if self.build is not None and self.build.winfo_ismapped():
-				self.build.place(x=self.padding.left, y=0)
+				self.build.place(x=0, y=0)
 			self.ping.place(x=self.winfo_width() - self.ping.width - self.padding.right, y=self.winfo_height() - self.ping.height - self.padding.right)
 			if self.scrollbar is not None and self.build.winfo_ismapped():
 				self.scrollbar.place()
@@ -94,7 +99,7 @@ class App(Tk):
 
 	def load_data(self):
 		self.build.set_champion(self.backend.get_build())
-		self.build.place(x=self.padding.left, y=self.padding.top)
+		self.build.place(x=0, y=self.padding.top)
 		self.scrollbar.place()
 
 	def on_closing(self):

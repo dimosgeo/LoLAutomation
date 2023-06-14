@@ -11,7 +11,7 @@ class ItemBuildFrame(tk.Frame):
 		self.horizontal_space = horizontal_space
 		self.item_list = []
 		self.image_list = []
-		self.descriptions = []
+		# self.descriptions = []
 		self.descriptionLabel = DescriptionLabel(self.winfo_toplevel(), bg='black', foreground='white', anchor='nw')
 
 	def set_items(self, items):
@@ -25,16 +25,19 @@ class ItemBuildFrame(tk.Frame):
 			self.image_list.append(image)
 			self.item_list.append(tk.Button(self, image=image, bg=self['bg'], activebackground=self['bg'], bd=0))
 			if 'description' in item:
-				self.descriptions.append(item['description'])
-				self.item_list[-1].bind('<Enter>', lambda *args: self.descriptionLabel.show_description('makaroniamakaroniamakaronia', args[0]))
+				# self.descriptions.append(item['description'])
+				self.item_list[-1].bind('<Enter>', self.create_lambda(item['description']))
 				self.item_list[-1].bind('<Leave>', lambda *args: self.descriptionLabel.hide_description())
-			else:
-				self.descriptions.append('')
+			# else:
+				# self.descriptions.append('')
 		
 		x = 0
 		for item in self.item_list:
 			item.place(x=x, y=0, height=self.height, width=self.height)
 			x += self.height + self.horizontal_space
+
+	def create_lambda(self, description):
+		return lambda *args: self.descriptionLabel.show_description(description, args[0])
 
 	def place(self, x=0, y=0):
 		super().place(x=x, y=y, height=self.height, width=self.width)
