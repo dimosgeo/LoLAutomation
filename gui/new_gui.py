@@ -72,7 +72,7 @@ class App(Tk):
 				self.status_label['text'] = 'Waiting for champion pick.'
 				self.add_build()
 				self.show_message_label()
-				# self.backend.champion_id = 84 # TEST
+				# self.backend.champion_id = 16 # TEST
 				# self.load_data() # TEST
 			if status == 'CHAMPION_PICKED':
 				self.status_label.place_forget()

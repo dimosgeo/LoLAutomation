@@ -32,7 +32,7 @@ class ItemBuildFrame(tk.Frame):
 			# else:
 				# self.descriptions.append('')
 			if 'count' in item:
-				self.count_list.append(NumberLabel(self, item['count']))
+				self.count_list.append(NumberLabel(self, item['count'], bg='black'))
 			else:
 				self.count_list.append(NumberLabel(self))
 		
@@ -49,11 +49,15 @@ class ItemBuildFrame(tk.Frame):
 		x = 0
 		for item, count in zip(self.item_list, self.count_list):
 			item.place(x=x, y=0, height=self.height, width=self.height)
-			count.place(x=x + self.height, y=self.height - self.font.metrics('linespace'))
+			if count['text']>1:
+				count.place(x=x + self.height - count.font.metrics('linespace'), y=self.height - count.font.metrics('linespace'))
 			x += self.height + self.horizontal_space
 	
 	def place_forget(self) -> None:
 		super().place_forget()
+		for count in self.count_list:
+			count.place_forget()
+
 		for item in self.item_list:
 			item.place_forget()
 
@@ -61,15 +65,16 @@ class ItemBuildFrame(tk.Frame):
 class NumberLabel(tk.Label):
 	def __init__(self, parent, text='', *args, **kwargs):
 		tk.Label.__init__(self, parent, *args, **kwargs)
-		self.font = Font(family='Helvetica', size=12)
+		self.font = Font(family='Helvetica', size=12, weight='bold')
 		self['font'] = self.font
+		self['foreground'] = 'white'
 		self['text'] = text
 
 	def place(self, x=0, y=0):
-		super().place(x=x, y=y)
+		super().place(x=x, y=y, height=self.font.metrics('linespace'), width=self.font.metrics('linespace'))
 
 	def place_forget(self):
-		super.place_forget()
+		super().place_forget()
 
 
 class DescriptionLabel(tk.Label):
