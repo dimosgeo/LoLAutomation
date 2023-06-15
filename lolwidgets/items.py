@@ -47,8 +47,9 @@ class ItemBuildFrame(tk.Frame):
 	def place(self, x=0, y=0):
 		super().place(x=x, y=y, height=self.height, width=self.width)
 		x = 0
-		for item in self.item_list:
+		for item, count in zip(self.item_list, self.count_list):
 			item.place(x=x, y=0, height=self.height, width=self.height)
+			count.place(x=x + self.height, y=self.height - self.font.metrics('linespace'))
 			x += self.height + self.horizontal_space
 	
 	def place_forget(self) -> None:
