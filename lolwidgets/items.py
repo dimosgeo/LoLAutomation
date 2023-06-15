@@ -11,6 +11,7 @@ class ItemBuildFrame(tk.Frame):
 		self.horizontal_space = horizontal_space
 		self.item_list = []
 		self.image_list = []
+		self.count_list = []
 		# self.descriptions = []
 		self.descriptionLabel = DescriptionLabel(self.winfo_toplevel(), bg='black', foreground='white', anchor='nw')
 
@@ -30,11 +31,15 @@ class ItemBuildFrame(tk.Frame):
 				self.item_list[-1].bind('<Leave>', lambda *args: self.descriptionLabel.hide_description())
 			# else:
 				# self.descriptions.append('')
+			if 'count' in item:
+				self.count_list.append(NumberLabel(self, item['count']))
+			else:
+				self.count_list.append(NumberLabel(self))
 		
-		x = 0
-		for item in self.item_list:
-			item.place(x=x, y=0, height=self.height, width=self.height)
-			x += self.height + self.horizontal_space
+		# x = 0
+		# for item in self.item_list:
+		# 	item.place(x=x, y=0, height=self.height, width=self.height)
+		# 	x += self.height + self.horizontal_space
 
 	def create_lambda(self, description):
 		return lambda *args: self.descriptionLabel.show_description(description, args[0])
@@ -50,6 +55,20 @@ class ItemBuildFrame(tk.Frame):
 		super().place_forget()
 		for item in self.item_list:
 			item.place_forget()
+
+
+class NumberLabel(tk.Label):
+	def __init__(self, parent, text='', *args, **kwargs):
+		tk.Label.__init__(self, parent, *args, **kwargs)
+		self.font = Font(family='Helvetica', size=12)
+		self['font'] = self.font
+		self['text'] = text
+
+	def place(self, x=0, y=0):
+		super().place(x=x, y=y)
+
+	def place_forget(self):
+		super.place_forget()
 
 
 class DescriptionLabel(tk.Label):
