@@ -16,11 +16,13 @@ class ItemBuildFrame(tk.Frame):
 		self.descriptionLabel = DescriptionLabel(self.winfo_toplevel(), bg='black', foreground='white', anchor='nw')
 
 	def set_items(self, items):
-		for item in self.item_list:
+		for item, count in zip(self.item_list, self.count_list):
 			item.destroy()
+			count.destroy()
 
 		self.image_list = []
 		self.item_list = []
+		self.count_list = []
 		for item in items:
 			image = ImageTk.PhotoImage(Image.open(item['image']).resize((int(self.height), int(self.height))))
 			self.image_list.append(image)
@@ -35,21 +37,24 @@ class ItemBuildFrame(tk.Frame):
 				self.count_list.append(NumberLabel(self, item['count'], bg='black'))
 			else:
 				self.count_list.append(NumberLabel(self))
-		
 		# x = 0
 		# for item in self.item_list:
 		# 	item.place(x=x, y=0, height=self.height, width=self.height)
 		# 	x += self.height + self.horizontal_space
+		self.place_children()
 
 	def create_lambda(self, description):
 		return lambda *args: self.descriptionLabel.show_description(description, args[0])
 
 	def place(self, x=0, y=0):
 		super().place(x=x, y=y, height=self.height, width=self.width)
+		self.place_children()
+
+	def place_children(self):
 		x = 0
 		for item, count in zip(self.item_list, self.count_list):
 			item.place(x=x, y=0, height=self.height, width=self.height)
-			if count['text']>1:
+			if count['text'] > 1:
 				count.place(x=x + self.height - count.font.metrics('linespace'), y=self.height - count.font.metrics('linespace'))
 			x += self.height + self.horizontal_space
 	
@@ -63,7 +68,7 @@ class ItemBuildFrame(tk.Frame):
 
 
 class NumberLabel(tk.Label):
-	def __init__(self, parent, text='', *args, **kwargs):
+	def __init__(self, parent, text=1, *args, **kwargs):
 		tk.Label.__init__(self, parent, *args, **kwargs)
 		self.font = Font(family='Helvetica', size=12, weight='bold')
 		self['font'] = self.font
@@ -75,6 +80,9 @@ class NumberLabel(tk.Label):
 
 	def place_forget(self):
 		super().place_forget()
+
+	def __repr__(self):
+		return str(self['text'])
 
 
 class DescriptionLabel(tk.Label):

@@ -49,14 +49,6 @@ class Build(tk.Frame):
 		self.data.select_lane(lane)
 		self.previous_selected = lane
 
-		self.starting_items.place_forget()
-		self.full_build.place_forget()
-
-		y = self.champion_frame.height + self.abilities.height + self.spacing.vertical * 2 + self.data.height
-		self.starting_items.place(x=self.spacing.horizontal * 2 + self.rune_sheet.width, y=y)
-		y += self.starting_items.height + self.spacing.vertical
-		self.full_build.place(x=self.spacing.horizontal * 2 + self.rune_sheet.width, y=y)
-
 		self.backend.set_everything(self.champion['build'][lane][1])
 
 	def place(self, x=0, y=0) -> None:
