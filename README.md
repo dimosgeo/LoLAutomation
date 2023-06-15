@@ -1,4 +1,4 @@
-# LoLAutomation (PATCH 13.8)
+# LoLAutomation (PATCH 13.11)
 
 ## About The Project
 This project is a Python-coded application. The primary objective of this project is to introduce automation to the League of Legends game. With the help of this program, players can automatically import Rune pages, spells, and items into the game during the League of Legends champion Select phase. Also, goal of this app is to help players by giving them the most common builds and champion ability level ups.
