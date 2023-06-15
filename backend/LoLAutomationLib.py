@@ -140,7 +140,7 @@ def getItems(url):
 	r = requests.get(path, verify=False).json()
 	items = {}
 	for item in r:
-		items[item['id']] = {'iconPath': item['iconPath']}
+		items[item['id']] = {'iconPath': item['iconPath'], 'iconDesc': item['name']}
 	return items
 
 
@@ -248,8 +248,8 @@ def getFullRunePageImages(url):
 
 def main():
 	url = get_client_url()
-	print(getRunes(url))
-
+	# print(getRunes(url))
+	print(getItems(url))
 
 if __name__ == '__main__':
 	main()
