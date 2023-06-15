@@ -27,7 +27,7 @@ class Build(tk.Frame):
 		self.starting_items = ItemBuildFrame(self, self.rune_sheet.width, height=item_size, background=self['bg'])
 		self.full_build = ItemBuildFrame(self, self.rune_sheet.width, height=item_size, background=self['bg'])
 
-		self.height = self.champion_frame.height + self.data.height + self.rune_sheet.height + 4 * vertical_space#+ self.abilities.height + self.starting_items.height + self.full_build.height + 6 * vertical_space
+		self.height = int(self.champion_frame.height + self.data.height + self.rune_sheet.height + 2 * vertical_space)#+ self.abilities.height + self.starting_items.height + self.full_build.height + 6 * vertical_space
 		self.previous_selected = ''
 	
 	def set_champion(self, champion) -> None:
@@ -56,14 +56,10 @@ class Build(tk.Frame):
 		y = 0
 		self.champion_frame.place(x=0, y=0)
 		y += self.champion_frame.height + self.spacing.vertical
-		self.data.grid(row=2, column=1, columnspan=1)
 		self.data.place(x=self.spacing.horizontal, y=y)
-		y += self.data.height  # + self.vertical_space // 2
-		self.data.grid(row=3, column=1, columnspan=1)
+		y += self.data.height
 		self.rune_sheet.place(x=self.spacing.horizontal, y=y)
 
-		# y += self.rune_sheet.height + self.spacing.vertical
-		self.data.grid(row=2, column=2, columnspan=1)
 		self.abilities.place(x=self.spacing.horizontal * 2 + self.rune_sheet.width, y=y)
 		y += self.abilities.height + self.spacing.vertical
 		self.starting_items.place(x=self.spacing.horizontal *2 + self.rune_sheet.width, y=y)

@@ -52,11 +52,14 @@ def get_abilities(tree, data_dict):
 def get_items(tree, data_dict):
 	start_items = tree.xpath('//*[@id="page-content"]/div[1]/div[2]/section/div/div/div[1]/div[2]/div[1]/div')[0].getchildren()
 	data_dict["start_items"] = []
+	data_dict["start_items_n"] = []
 	for item in start_items:
 		if item.__len__() != 0:
 			if item.values()[0] == " _2kdnf4":
+				data_dict["start_items_n"][-1]=int(item.getchildren()[0].text_content())
 				continue
 			data_dict["start_items"].append(int(item.getchildren()[0].values()[1].split("-")[-1]))
+			data_dict["start_items_n"].append(1)
 
 	data_dict["best_items"] = []
 	best_items = tree.xpath('//*[@id="page-content"]/div[2]/div[2]/section[1]/div/div/div/div[1]')[0].getchildren()
@@ -136,5 +139,5 @@ async def create_page_tasks(queue_name='5v5', champion_name='aatrox', lanes=('to
 	return await asyncio.gather(*tasks)
 
 if __name__ == '__main__':
-	result = load_pages()
-	print(get_build(result['top']))
+	result = load_pages(champion_name="Soraka")
+	print(get_build(result['support']))

@@ -30,8 +30,8 @@ class App(Tk):
 
 		self.screenwidth = self.winfo_screenwidth()
 		self.screenheight = self.winfo_screenheight()
-		self.height = int(self.screenheight * 0.8)
-		self.width = 735
+		self.height = int(self.screenheight * 0.5)
+		self.width = int(self.screenwidth * 0.2)
 		alignstr = f'{self.width}x{self.height}+{(self.screenwidth - self.width) // 2}+{(self.screenheight - self.height) // 2}'
 
 		self.geometry(alignstr)
@@ -51,6 +51,7 @@ class App(Tk):
 		self.navigation_images = self.backend.get_navigation_icons()
 		self.build = Build(self, backend=self.backend, background=utils.background_color)
 		self.width = self.build.width
+		self.height = self.build.height
 		alignstr = f'{self.width}x{self.height}+{(self.screenwidth - self.width) // 2}+{(self.screenheight - self.height) // 2}'
 		self.geometry(alignstr)
 		self.scrollbar = MyScrollBar(self, width=16, background=utils.background_color, child_w=self.build)
