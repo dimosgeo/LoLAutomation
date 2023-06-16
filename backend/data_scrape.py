@@ -4,9 +4,17 @@ from lxml import html
 import platform
 
 
-def get_lane(tree):
-	lane = tree.xpath('//*[@id="splash-content"]/div[1]/div/div/div/div[2]/div/h1/span[2]/span[1]')[0].text_content().strip().split(" ")[0].lower()
-	return 'top' if lane == 'lol' else lane
+def get_lane(tree, data_dict, queue):
+	lanes=['top', 'jungle', 'mid', 'adc', 'support', '']
+	if queue == '5v5':
+		lane = tree.xpath('//*[@id="splash-content"]/div[1]/div/div/div/div[2]/div/h1/span[2]/span[1]')[0].text_content().strip().lower()
+		if lane in lanes:
+			data_dict['lane'] = lane
+		else:
+			lane = tree.xpath('//*[@id="splash-content"]/div[1]/div/div/div/div[2]/div/h1/span[1]/span[2]/div/div')
+			data_dict['lane'] = lane[0].values()[-1].split('/')[-1].split('.')[0].split('_')[0]
+	else:
+		data_dict['lane'] = ''
 
 
 def get_spells(tree, data_dict):
@@ -87,9 +95,10 @@ def get_rates(tree, data_dict, queue):
 
 
 def getDefaultLane(page):
+	lanes=['top', 'jungle', 'mid', 'adc', 'support', '']
 	tree = html.fromstring(page)
-	lane = get_lane(tree)
-	return 'bot' if lane == 'adc' else lane
+	lane = tree.xpath('//*[@id="splash-content"]/div[1]/div/div/div/div[2]/div/h1/span[2]/span[1]')[0].text_content().strip().lower()
+	return lane if lane in lanes else 'mid'
 
 
 def checkIfExists(tree):
@@ -106,7 +115,7 @@ def get_build(page, queue='5v5'):
 	if not checkIfExists(tree):
 		data_dict["exists"] = False
 		return data_dict
-	data_dict['lane'] = get_lane(tree)
+	get_lane(tree, data_dict, queue)
 	get_spells(tree, data_dict)
 	get_runes(tree, data_dict)
 	get_abilities(tree, data_dict)
@@ -116,7 +125,7 @@ def get_build(page, queue='5v5'):
 
 
 async def load_page(queue_name='5v5', champion_name='aatrox', lane='top'):
-	url = f'https://www.metasrc.com/{queue_name}/champion/{champion_name}/{"adc" if lane == "bot" else lane}'
+	url = f'https://www.metasrc.com/{queue_name}/champion/{champion_name}/{lane}'
 	page = ''
 	async with aiohttp.ClientSession() as session:
 		async with session.get(url) as response:
@@ -124,7 +133,7 @@ async def load_page(queue_name='5v5', champion_name='aatrox', lane='top'):
 	return lane, page
 
 
-def load_pages(queue_name='5v5', champion_name='aatrox', lanes=('top', 'jungle', 'mid', 'bot', 'support', '')):
+def load_pages(queue_name='5v5', champion_name='aatrox', lanes=('top', 'jungle', 'mid', 'adc', 'support', '')):
 	if platform.system() == 'Windows':
 		asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 	data = asyncio.run(create_page_tasks(queue_name, champion_name, lanes), debug=False)
@@ -134,10 +143,13 @@ def load_pages(queue_name='5v5', champion_name='aatrox', lanes=('top', 'jungle',
 	return result
 
 
-async def create_page_tasks(queue_name='5v5', champion_name='aatrox', lanes=('top', 'jungle', 'mid', 'bot', 'support', '')):
+async def create_page_tasks(queue_name='5v5', champion_name='aatrox', lanes=('top', 'jungle', 'mid', 'adc', 'support', '')):
 	tasks = [asyncio.create_task(load_page(queue_name, champion_name, lane)) for lane in lanes]
 	return await asyncio.gather(*tasks)
 
+
 if __name__ == '__main__':
-	result = load_pages(champion_name="Soraka")
-	print(get_build(result['support']))
+	result = load_pages('ahri', 'aram')
+	for lane in result:
+		print(get_build(result[lane], queue='aram'))
+		print(getDefaultLane(result[lane]))

@@ -139,8 +139,8 @@ class ControlFrame(tk.Frame):
 class LaneFrame(tk.Frame):
 	def __init__(self, parent, lane_navigation, height: float, horizontal_spacing=5, func: callable = lambda *args: None, *args, **kwargs) -> None:
 		tk.Frame.__init__(self, parent, *args, **kwargs)
-		self.indexes = {'top': 0, 'jungle': 1, 'mid': 2, 'bot': 3, 'support': 4}
-		lanes = ['top', 'jungle', 'mid', 'bot', 'support']
+		self.indexes = {'top': 0, 'jungle': 1, 'mid': 2, 'adc': 3, 'support': 4}
+		lanes = ['top', 'jungle', 'mid', 'adc', 'support']
 		self.lane_func = func
 		self.height = height
 		self.width = 0

@@ -50,7 +50,7 @@ class Backend:
         self.navigation_icons['lane_navigation']['top'] = {'enabled': 'images/top.png', 'disabled': 'images/top_disabled.png'}
         self.navigation_icons['lane_navigation']['jungle'] = {'enabled': 'images/jungle.png', 'disabled': 'images/jungle_disabled.png'}
         self.navigation_icons['lane_navigation']['mid'] = {'enabled': 'images/mid.png', 'disabled': 'images/mid_disabled.png'}
-        self.navigation_icons['lane_navigation']['bot'] = {'enabled': 'images/bot.png', 'disabled': 'images/bot_disabled.png'}
+        self.navigation_icons['lane_navigation']['adc'] = {'enabled': 'images/adc.png', 'disabled': 'images/adc_disabled.png'}
         self.navigation_icons['lane_navigation']['support'] = {'enabled': 'images/support.png', 'disabled': 'images/support_disabled.png'}
 
     def get_build(self):
@@ -79,8 +79,8 @@ class Backend:
         champion['image'] = champion_info['iconPath']
         champion['abilities'] = [ability for ability in lolib.getAbilitiesIcons(self.url, self.champion_id)]
 
-        lanes = ['top', 'jungle', 'mid', 'bot', 'support', '']
-        pages = ds.load_pages(champion_info['alias'], queueName, lanes)
+        lanes = ['top', 'jungle', 'mid', 'adc', 'support', '']
+        pages = ds.load_pages(queueName, champion_info['alias'], lanes)
         for lane in lanes[:-1]:
             exists, championLane, build = BuildByLane(pages[lane], queueName)
             if exists:

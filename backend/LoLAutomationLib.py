@@ -67,28 +67,18 @@ def getImageFromUrl(url, img_path):
 
 def getLobbyQueue(url):
 	path = url+"/lol-lobby/v2/lobby"
-	return requests.get(path, verify=False).json()["gameConfig"]["queueId"]
+	return requests.get(path, verify=False).json()["gameConfig"]["gameMode"].lower()
 
-
-def getQueueName(url):
-	queue = getLobbyQueue(url)
-
-	if queue == -1:
-		return 'other'
-
-	queues = url+"/lol-game-data/assets/v1/queues.json"
-	queues = requests.get(queues, verify=False).json()
-	return queues[str(queue)]["shortName"].lower()
 
 def getQueueSpecialName(url):
-	queue = getQueueName(url)
+	queue = getLobbyQueue(url)
 	if "spellbook" in queue:
 		return "ultbook"
 	elif "aram" in queue:
 		return "aram"
 	elif "urf" in queue:
 		return "urf"
-	return "5v5"
+	return "5v5"	#"gameMode": "CLASSIC"
 
 
 def checkIfChampionSelect(url):
@@ -250,6 +240,7 @@ def main():
 	url = get_client_url()
 	# print(getRunes(url))
 	print(getItems(url))
+
 
 if __name__ == '__main__':
 	main()
