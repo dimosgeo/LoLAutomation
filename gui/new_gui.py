@@ -3,7 +3,7 @@ from utils import utils
 from tkinter import Tk, Label
 from tkinter.font import Font
 from backend import Backend
-from lolwidgets import Spacing, Padding, Build, PingLabel, MyScrollBar
+from lolwidgets import Spacing, Padding, Build, PingLabel, MyScrollBar, WindowNavigation
 from threading import Thread
 from PIL import Image, ImageTk
 
@@ -15,6 +15,8 @@ class App(Tk):
 		self.title('LOL Assistant')
 		self.protocol("WM_DELETE_WINDOW", self.on_closing)
 		self.configure(bg=utils.background_color)
+		# self.overrideredirect(True)
+		# self.attributes('-type', 'dock')
 		self.bind("<Configure>", self.events_handler)
 		self.resizable(width=False, height=False)
 
@@ -72,8 +74,8 @@ class App(Tk):
 				self.status_label['text'] = 'Waiting for champion pick.'
 				self.add_build()
 				self.show_message_label()
-				# self.backend.champion_id = 16 # TEST
-				# self.load_data() # TEST
+				self.backend.champion_id = 58#16 # TEST
+				self.load_data() # TEST
 			if status == 'CHAMPION_PICKED':
 				self.status_label.place_forget()
 				self.load_data()
@@ -90,7 +92,7 @@ class App(Tk):
 	def events_handler(self, event):
 		if event.widget == self and (self.winfo_width() != self.width or self.winfo_height() != self.height):
 			if self.build is not None and self.build.winfo_ismapped():
-				self.build.place(x=0, y=0)
+				self.build.place(x=0, y=self.padding.TOP)
 			self.ping.place(x=self.winfo_width() - self.ping.width - self.padding.right, y=self.winfo_height() - self.ping.height - self.padding.right)
 			if self.scrollbar is not None and self.build.winfo_ismapped():
 				self.scrollbar.place()
@@ -105,7 +107,7 @@ class App(Tk):
 
 	def on_closing(self):
 		self.backend.close()
-		self.lolListener.join()
+		# self.lolListener.join()
 		self.destroy()
 
 

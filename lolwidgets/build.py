@@ -15,17 +15,15 @@ class Build(tk.Frame):
 		self.champion = None
 		self.backend = backend
 		self.spacing = Spacing(vertical=vertical_space, horizontal=horizontal_space)
-		# self['highlightbackground'] = "white" # REMOVE
-		# self['highlightthickness'] = 2 # REMOVE
 
-		self.rune_sheet = RuneSheet(self, self.backend.get_runes(), background=utils.background_color, vertical_space=10, highlightthickness=2)
+		self.rune_sheet = RuneSheet(self, self.backend.get_runes(), vertical_space=10)
 		self.abilities = AbilitiesTable(self, cell_size=(self.rune_sheet.width - ability_cell_size) / 19, border_size=2)
 		self.width = int(self.rune_sheet.width + self.abilities.width + self.spacing.horizontal * 3)
 		self.champion_frame = ChampionFrame(self, width=self.width, size=champion_frame_size, backend=self.backend, background=self['bg'])
 		self.data = ControlFrame(self, lane_navigation=self.backend.navigation_icons['lane_navigation'], width=self.rune_sheet.width, font_size=control_bar_font_size, func=self.select_lane, background=self['bg'])
 		
-		self.starting_items = ItemBuildFrame(self, self.rune_sheet.width, height=item_size, background=self['bg'])
-		self.full_build = ItemBuildFrame(self, self.rune_sheet.width, height=item_size, background=self['bg'])
+		self.starting_items = ItemBuildFrame(self, title='Starting Items', width=self.rune_sheet.width, height=item_size, background=self['bg'])
+		self.full_build = ItemBuildFrame(self, title='Full Build', width=self.rune_sheet.width, height=item_size, background=self['bg'])
 
 		self.height = int(self.champion_frame.height + self.data.height + self.rune_sheet.height + 2 * vertical_space)#+ self.abilities.height + self.starting_items.height + self.full_build.height + 6 * vertical_space
 		self.previous_selected = ''
@@ -81,7 +79,7 @@ class ControlFrame(tk.Frame):
 		tk.Frame.__init__(self, parent, *args, **kwargs)
 		self.horizontal_spacing = horizontal_spacing
 		self.font = Font(size=font_size)
-		self.height = self.font.metrics('linespace')
+		self.height = self.font.metrics('linespace') * 2
 		self.width = width
 
 		self.pick_rate = tk.Label(self, text='PR:', font=self.font, background=self['bg'], foreground='white', anchor='w')
@@ -139,33 +137,33 @@ class ControlFrame(tk.Frame):
 class LaneFrame(tk.Frame):
 	def __init__(self, parent, lane_navigation, height: float, horizontal_spacing=5, func: callable = lambda *args: None, *args, **kwargs) -> None:
 		tk.Frame.__init__(self, parent, *args, **kwargs)
-		self.indexes = {'top': 0, 'jungle': 1, 'mid': 2, 'adc': 3, 'support': 4}
-		lanes = ['top', 'jungle', 'mid', 'adc', 'support']
 		self.lane_func = func
 		self.height = height
 		self.width = 0
 		self.horizontal_spacing = horizontal_spacing
-		self.button_list = [LaneButton(self, lane=lane, active_icon=lane_navigation[lane]['enabled'], inactive_icon=lane_navigation[lane]['disabled'], size=int(self.height), borderwidth=0, background=self['bg'], activebackground=self['bg'], func=self.toggle_lane) for lane in lanes]
+		self.button_list = [LaneButton(self, lane=lane, active_icon=lane_navigation[lane]['enabled'], inactive_icon=lane_navigation[lane]['disabled'], size=int(self.height), borderwidth=0, background=self['bg'], activebackground=self['bg'], func=self.toggle_lane) for lane in utils.lanes if lane in lane_navigation]
 		self.active_buttons = []
 		self.previous_selected = -1
 
 	def select_lane(self, lane):
 		if self.previous_selected != -1:
 			self.button_list[self.previous_selected].set_active(False)
-		self.button_list[self.indexes[lane]].set_active(True)
-		self.previous_selected = self.indexes[lane]
+			self.button_list[self.previous_selected]['bg'] = self['bg']
+		self.button_list[utils.lane_indexes[lane]].set_active(True)
+		self.button_list[utils.lane_indexes[lane]]['bg'] = utils.widget_color
+		self.previous_selected = utils.lane_indexes[lane]
 
 	def toggle_lane(self, lane):
-		if self.previous_selected == self.indexes[lane]:
+		if self.previous_selected == utils.lane_indexes[lane]:
 			return
 		self.lane_func(lane)
 
 	def set_active_buttons(self, lanes):
 		self.active_buttons = []
 		for lane in lanes:
-			self.active_buttons.append(self.indexes[lane])
+			self.active_buttons.append(utils.lane_indexes[lane])
 		self.active_buttons.sort()
-		self.width = (self.height + self.horizontal_spacing) * len(self.active_buttons)
+		self.width = (self.height + self.horizontal_spacing) * len(self.active_buttons) - self.horizontal_spacing
 	
 	def place(self, x: float = 0, y: float = 0) -> None:
 		super().place(x=x, y=y, width=(self.height + self.horizontal_spacing) * len(self.active_buttons), height=self.height)

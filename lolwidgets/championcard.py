@@ -1,14 +1,13 @@
 from tkinter import Frame, Button, Widget, Label
 from tkinter.font import Font
 from lolwidgets.utils import Spacing
+from utils import utils
 from PIL import Image, ImageTk
 
 
 class ChampionFrame(Frame):
 	def __init__(self, parent: Widget, width: float = 0, size: float = 0, backend=None,  name_size: int = 26, spell_size: int = 65, horizontal_spacing: int = 15, *args, **kwargs) -> None:
 		Frame.__init__(self, parent, *args, **kwargs)
-		# self['highlightbackground'] = "blue" # REMOVE
-		# self['highlightthickness'] = 2 # REMOVE
 		self.width = width
 		self.spell_size = spell_size
 		self.backend = backend
@@ -41,12 +40,12 @@ class SummonerSpellFrame(Frame):
 		self.height = size
 		self.backend = backend
 		self.images = []
-		self.spells = [Button(self, bd=0), Button(self, bd=0)]
+		self.spells = [Button(self, bd=0, bg=self['bg'], activebackground=self['bg']) for i in range(2)]
 		self.swap_button_size = 20
 		self.swap_image = ImageTk.PhotoImage(Image.open('images/swap_icon.png').resize((self.swap_button_size, self.swap_button_size)))
 		self.label_font = Font(family="Helvetica", size=12, weight="bold")
 		self.button_labels = [Label(self, text='D', background='black', foreground='white', font=self.label_font), Label(self, text='F', background='black', foreground='white', font=self.label_font)]
-		self.swap_button = Button(self, image=self.swap_image, background=self['bg'], activebackground='#292C44', borderwidth=0, command=self.swap_spells)
+		self.swap_button = Button(self, image=self.swap_image, background=self['bg'], activebackground=utils.widget_color, borderwidth=0, command=self.swap_spells)
 		self.width = size * 2 + self.spacing.horizontal
 		self.primary_spell_f = True
 

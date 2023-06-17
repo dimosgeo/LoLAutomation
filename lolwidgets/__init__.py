@@ -5,4 +5,6 @@ from lolwidgets.items import ItemBuildFrame
 from lolwidgets.championcard import ChampionFrame
 from lolwidgets.runepage import RuneSheet
 from lolwidgets.utils import *
+from lolwidgets.descriptionLabel import DescriptionLabel 
 from lolwidgets.ping_label import PingLabel
+from lolwidgets.windowNavigation import WindowNavigation

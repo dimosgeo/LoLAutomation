@@ -1,5 +1,6 @@
 from utils import utils
 import tkinter as tk
+from tkinter import ttk
 from PIL import Image, ImageTk
 
 
@@ -8,15 +9,17 @@ class RuneSheet(tk.Frame):
 		tk.Frame.__init__(self, parent, *args, **kwargs)
 		self.categories_space = categories_space
 		self.previous_active = [-1, -1]
-		self.main_categories = RuneHeaderFrame(self, rune_list=rune_list[0], size=categories_size, horizontal_space=horizontal_space, background=self['bg'])
-		self.secondary_categories = RuneHeaderFrame(self, rune_list=rune_list[0], size=categories_size, horizontal_space=horizontal_space, background=self['bg'])
-		self.pages = [RuneFrame(self, page, keystone_size=keystone_size, rune_size=rune_size, horizontal_space=horizontal_space, is_primary=True, vertical_space=vertical_space, background=self['bg']) for page in rune_list[1:-1]]
-		self.small_runes = StatRunes(self, rune_list=rune_list[-1], rune_size=small_rune_size, background=self['bg'])
+		self.bg_label = tk.Label(self, bg=utils.widget_color)
+		self.main_categories = RuneHeaderFrame(self, rune_list=rune_list[0], size=categories_size, horizontal_space=horizontal_space, background=utils.widget_color)
+		self.secondary_categories = RuneHeaderFrame(self, rune_list=rune_list[0], size=categories_size, horizontal_space=horizontal_space, background=utils.widget_color)
+		self.pages = [RuneFrame(self, page, keystone_size=keystone_size, rune_size=rune_size, horizontal_space=horizontal_space, is_primary=True, vertical_space=vertical_space, background=utils.widget_color) for page in rune_list[1:-1]]
+		self.small_runes = StatRunes(self, rune_list=rune_list[-1], rune_size=small_rune_size, background=utils.widget_color)
 		self.width = self.main_categories.width + self.secondary_categories.width - self.secondary_categories.size + self.categories_space * 3
 		self.height = self.secondary_categories.size + self.pages[0].height - keystone_size + self.small_runes.height + categories_space * 1
 
 	def place(self, x=0, y=0):
 		super().place(x=x, y=y, width=self.width, height=self.height)
+		self.bg_label.place(x=0, y=0, width=self.width, height=self.height)
 
 	def clear_pages(self):
 		if self.previous_active[0] >= 0:
@@ -108,7 +111,7 @@ class StatRunes(tk.Frame):
 		self.height = (self.rune_size + self.vertical_space) * len(rune_list)
 		rune_num = max((len(row) for row in rune_list))
 		self.width = rune_num * self.rune_size + (rune_num + 1) * self.horizontal_space
-		self.rune_buttons = [[RuneButton(parent=self, icon=rune, size=self.rune_size, background=self['bg']) for rune in row] for row in rune_list]
+		self.rune_buttons = [[RuneButton(parent=self, icon=rune, size=self.rune_size, bg=utils.widget_color) for rune in row] for row in rune_list]
 	
 	def select_runes(self, runes):
 		for i, value in enumerate(self.previous_selected):
@@ -148,7 +151,7 @@ class RuneFrame(tk.Frame):
 		self.rune_sizes = [rune_size, keystone_size]
 		self.horizontal_space = horizontal_space
 		self.vertical_space = vertical_space
-		self.rune_buttons = [[RuneButton(parent=self, icon=rune, size=keystone_size, background=self['bg']) for rune in rune_list[0]]] + [[RuneButton(parent=self, icon=rune, size=rune_size, borderwidth=0, background=self['bg']) for rune in row] for row in rune_list[1:]]
+		self.rune_buttons = [[RuneButton(parent=self, icon=rune, size=keystone_size, bg=self['bg']) for rune in rune_list[0]]] + [[RuneButton(parent=self, icon=rune, size=rune_size, borderwidth=0, bg=self['bg']) for rune in row] for row in rune_list[1:]]
 		
 	@property
 	def width(self) -> float:
@@ -194,7 +197,7 @@ class RuneButton(tk.Button):
 		self.active = False
 		self.active_image = ImageTk.PhotoImage(icon)
 		self.inactive_image = ImageTk.PhotoImage(utils.grayscale(icon))
-		self['activebackground'] = utils.background_color
+		self['activebackground'] = self['bg']
 		self.set_active(False)
 		# self.bind("<Button-1>", lambda _ : "break", add=True)
 

@@ -125,7 +125,7 @@ def get_build(page, queue='5v5'):
 
 
 async def load_page(queue_name='5v5', champion_name='aatrox', lane='top'):
-	url = f'https://www.metasrc.com/{queue_name}/champion/{champion_name}/{lane}'
+	url = f'https://www.metasrc.com/lol/{queue_name}/champion/{champion_name}/{lane}'
 	page = ''
 	async with aiohttp.ClientSession() as session:
 		async with session.get(url) as response:

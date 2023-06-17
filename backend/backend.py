@@ -1,5 +1,6 @@
 import time
 from queue import Queue
+from utils import utils
 import subprocess
 import backend.LoLAutomationLib as lolib
 from backend.lolhandler import LoLHandler
@@ -46,12 +47,7 @@ class Backend:
         print('swapped')
 
     def get_navigation_icons(self):
-        self.navigation_icons['lane_navigation'] = {}
-        self.navigation_icons['lane_navigation']['top'] = {'enabled': 'images/top.png', 'disabled': 'images/top_disabled.png'}
-        self.navigation_icons['lane_navigation']['jungle'] = {'enabled': 'images/jungle.png', 'disabled': 'images/jungle_disabled.png'}
-        self.navigation_icons['lane_navigation']['mid'] = {'enabled': 'images/mid.png', 'disabled': 'images/mid_disabled.png'}
-        self.navigation_icons['lane_navigation']['adc'] = {'enabled': 'images/adc.png', 'disabled': 'images/adc_disabled.png'}
-        self.navigation_icons['lane_navigation']['support'] = {'enabled': 'images/support.png', 'disabled': 'images/support_disabled.png'}
+        self.navigation_icons['lane_navigation'] = {lane : {'disabled': f'images/{lane}_disabled.png', 'enabled': f'images/{lane}.png'} for lane in utils.lanes}
 
     def get_build(self):
         def BuildByLane(page, queueName):
@@ -70,14 +66,14 @@ class Backend:
             return True, championLane, build
 
         champion_info = lolib.getChampionInfo(self.url, self.champion_id)
-        queueName = lolib.getQueueSpecialName(self.url)
-        # queueName = '' # TEST
+        # queueName = lolib.getQueueSpecialName(self.url)
+        queueName = '' # TEST
 
         champion = dict()
         champion['build'] = {}
         champion['name'] = champion_info['name']
         champion['image'] = champion_info['iconPath']
-        champion['abilities'] = [ability for ability in lolib.getAbilitiesIcons(self.url, self.champion_id)]
+        champion['abilities'] = [{'name': '', 'icon': ability} for ability in lolib.getAbilitiesIcons(self.url, self.champion_id)]
 
         lanes = ['top', 'jungle', 'mid', 'adc', 'support', '']
         pages = ds.load_pages(queueName, champion_info['alias'], lanes)

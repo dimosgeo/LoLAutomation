@@ -34,7 +34,6 @@ class LoLHandler(Thread):
                 self.get_client_url()
 
             if self.client_state == 'OPEN' and self.server_state == 'CLOSED':
-                print('Server Closed.')
                 self.server_state = self.check_server_status()
 
             if self.server_state == 'OPEN' and previous_server_state == 'CLOSED':
@@ -47,8 +46,8 @@ class LoLHandler(Thread):
             if self.champion_id > 0 and self.champion_id != previous_champion:
                 self.queue_out.put('CHAMPION_PICKED')
             time.sleep(.1)
-        print('Process closed')
         self.queue_out.put('PROCESS_CLOSED')
+        print('Process closed')
 
     def loop_stop(self):
         self.loop = False
@@ -57,13 +56,12 @@ class LoLHandler(Thread):
         r = []
         status_code = -1
         try:
-            print(self.url)
             r = requests.get(self.url + "/lol-perks/v1/styles", verify=False)
             status_code = r.status_code
             r = r.json()
         except requests.exceptions.RequestException as e:
-            print(e)
-
+            print('Couldn\'t connect to the client server. Retrying in 2 seconds.')
+            time.sleep(2)
         return 'OPEN' if status_code == 200 and len(r) > 0 else 'CLOSED'
 
     def get_champion_picked(self):
