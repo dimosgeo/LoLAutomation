@@ -16,7 +16,6 @@ class App(Tk):
 		self.protocol("WM_DELETE_WINDOW", self.on_closing)
 		self.configure(bg=utils.background_color)
 		# self.overrideredirect(True)
-		# self.attributes('-type', 'dock')
 		self.bind("<Configure>", self.events_handler)
 		self.resizable(width=False, height=False)
 
@@ -74,8 +73,8 @@ class App(Tk):
 				self.status_label['text'] = 'Waiting for champion pick.'
 				self.add_build()
 				self.show_message_label()
-				self.backend.champion_id = 58#16 # TEST
-				self.load_data() # TEST
+				# self.backend.champion_id = 58#16 # TEST
+				# self.load_data() # TEST
 			if status == 'CHAMPION_PICKED':
 				self.status_label.place_forget()
 				self.load_data()

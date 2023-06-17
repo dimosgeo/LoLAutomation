@@ -66,8 +66,8 @@ class Backend:
             return True, championLane, build
 
         champion_info = lolib.getChampionInfo(self.url, self.champion_id)
-        # queueName = lolib.getQueueSpecialName(self.url)
-        queueName = '' # TEST
+        queueName = lolib.getQueueSpecialName(self.url)
+        # queueName = '' # TEST
 
         champion = dict()
         champion['build'] = {}
