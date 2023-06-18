@@ -108,8 +108,8 @@ def getRunes(url):
 	runes = {}
 	for s in r:
 		slots = [x['perks'] for x in s['slots']]
-		runes[s['id']] = {'slots': slots, 'iconPath': s['assetMap']['svg_icon'], 'color':rune_colors[s['id']]}
-		print(runes[s['id']])
+		runes[s['id']] = {'slots': slots, 'iconPath': s['iconPath'], 'color':rune_colors[s['id']]}
+		# runes[s['id']] = {'slots': slots, 'iconPath': s['assetMap']['svg_icon'], 'color':rune_colors[s['id']]}
 	return runes
 
 
@@ -156,9 +156,10 @@ def updateItemSet(url, start_items, best_items, title='AUTOSET'):
 	requests.put(put_sets, verify=False, json={"itemSets": all_item_sets})
 
 
-def setSpells(url, spells):
+def setSpells(url, spells, skinid = 222029):
 	path = url+"/lol-champ-select/v1/session/my-selection"
 	requests.patch(path, verify=False, json={"spell1Id": spells[0], "spell2Id": spells[1]})
+	# requests.patch(path, verify=False, json={"selectedSkinId": skinid, "spell1Id": spells[0], "spell2Id": spells[1]})
 
 
 def setRunes(url, runes, title='AUTORUNES'):
@@ -240,9 +241,26 @@ def getFullRunePageImages(url):
 	return allRunes
 
 
+def getSkins(url):
+	path = url+"/lol-champ-select/v1/skin-selector-info"
+	selected = requests.get(path, verify=False).json()
+	selectedChampion = selected['selectedChampionId']
+	selectedSkin = selected['selectedSkinId']
+
+	path = url+"/lol-champ-select/v1/pickable-skin-ids"
+	all_skins = requests.get(path, verify=False).json()
+
+	path = url+"/lol-game-data/assets/v1/champions/"+str(selectedChampion)+".json"
+	skins = requests.get(path, verify=False).json()['skins']
+	availableSkins = [{skin['id']:skin['uncenteredSplashPath']} for skin in skins if skin['id'] in all_skins or skin['isBase']]
+	
+	return {"selectedSkinId": selectedSkin, "availableSkins": availableSkins}
+
+
 def main():
 	url = get_client_url()
-	getRunes(url)
+	print(getSkins(url))
+	# getRunes(url)
 	# print(getItems(url))
 
 
