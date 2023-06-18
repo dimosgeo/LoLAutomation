@@ -156,10 +156,14 @@ def updateItemSet(url, start_items, best_items, title='AUTOSET'):
 	requests.put(put_sets, verify=False, json={"itemSets": all_item_sets})
 
 
-def setSpells(url, spells, skinid = 222029):
+def setSpells(url, spells):
 	path = url+"/lol-champ-select/v1/session/my-selection"
 	requests.patch(path, verify=False, json={"spell1Id": spells[0], "spell2Id": spells[1]})
-	# requests.patch(path, verify=False, json={"selectedSkinId": skinid, "spell1Id": spells[0], "spell2Id": spells[1]})
+
+
+def setSkin(url, skinid):
+	path = url+"/lol-champ-select/v1/session/my-selection"
+	requests.patch(path, verify=False, json={"selectedSkinId": skinid})	
 
 
 def setRunes(url, runes, title='AUTORUNES'):
@@ -259,7 +263,7 @@ def getSkins(url):
 
 def main():
 	url = get_client_url()
-	print(getSkins(url))
+	setSkin(url,222029)
 	# getRunes(url)
 	# print(getItems(url))
 
