@@ -10,22 +10,22 @@ from lolwidgets.utils import *
 
 
 class Build(tk.Frame):
-	def __init__(self, parent, backend, vertical_space: float = 20, horizontal_space: float = 20, ability_cell_size: float = 40, champion_frame_size: float = 100, item_size: float = 64, control_bar_font_size: int = 16, *args, **kwargs) -> None:
+	def __init__(self, parent, backend, vertical_space: int = 20, horizontal_space: float = 20, ability_cell_size: int = 40, champion_frame_size: int = 110, item_size: float = 64, control_bar_font_size: int = 16, *args, **kwargs) -> None:
 		tk.Frame.__init__(self, parent, *args, **kwargs)
 		self.champion = None
 		self.backend = backend
 		self.spacing = Spacing(vertical=vertical_space, horizontal=horizontal_space)
 
 		self.rune_sheet = RuneSheet(self, self.backend.get_runes(), vertical_space=10)
-		self.abilities = AbilitiesTable(self, cell_size=(self.rune_sheet.width - ability_cell_size) / 19, border_size=2)
+		self.abilities = AbilitiesTable(self, cell_size=int((self.rune_sheet.width - ability_cell_size) / 19), border_size=2)
 		self.width = int(self.rune_sheet.width + self.abilities.width + self.spacing.horizontal * 3)
 		self.champion_frame = ChampionFrame(self, width=self.width, size=champion_frame_size, backend=self.backend, background=self['bg'])
 		self.data = ControlFrame(self, lane_navigation=self.backend.navigation_icons['lane_navigation'], width=self.rune_sheet.width, font_size=control_bar_font_size, func=self.select_lane, background=self['bg'])
 		
-		self.starting_items = ItemBuildFrame(self, title='Starting Items', width=self.rune_sheet.width, height=item_size, background=self['bg'])
-		self.full_build = ItemBuildFrame(self, title='Full Build', width=self.rune_sheet.width, height=item_size, background=self['bg'])
+		self.starting_items = ItemBuildFrame(self, title='Starting Items', width=self.rune_sheet.width, height=item_size, title_width=150, background=self['bg'])
+		self.full_build = ItemBuildFrame(self, title='Full Build', width=self.rune_sheet.width, height=item_size, title_width=150, background=self['bg'])
 
-		self.height = int(self.champion_frame.height + self.data.height + self.rune_sheet.height + 2 * vertical_space)#+ self.abilities.height + self.starting_items.height + self.full_build.height + 6 * vertical_space
+		self.height = int(self.champion_frame.height + self.data.height + self.rune_sheet.height + vertical_space)#+ self.abilities.height + self.starting_items.height + self.full_build.height + 6 * vertical_space
 		self.previous_selected = ''
 	
 	def set_champion(self, champion) -> None:
@@ -53,7 +53,7 @@ class Build(tk.Frame):
 		super().place(x=x, y=y, height=self.height, width=self.width)
 		y = 0
 		self.champion_frame.place(x=0, y=0)
-		y += self.champion_frame.height + self.spacing.vertical
+		y += self.champion_frame.height
 		self.data.place(x=self.spacing.horizontal, y=y)
 		y += self.data.height
 		self.rune_sheet.place(x=self.spacing.horizontal, y=y)

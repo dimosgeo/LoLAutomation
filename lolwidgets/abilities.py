@@ -6,7 +6,7 @@ from lolwidgets.descriptionLabel import DescriptionLabel
 
 
 class AbilitiesTable(tk.Frame):
-    def __init__(self, parent, cell_size: float, border_size: float, *args, **kwargs):
+    def __init__(self, parent, cell_size: int, border_size: int, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.ability_buttons = ['P', 'Q', 'W', 'E', 'R']
         self['bg'] = utils.widget_color
@@ -14,7 +14,7 @@ class AbilitiesTable(tk.Frame):
         self.border_size = border_size
         self.width = (self.cell_size + self.border_size) * 19 + self.border_size
         self.height = (self.cell_size + self.border_size) * 5 + self.border_size
-        self.table: list = [[tk.Label(self, font=Font(family="Helvetica", size=12, weight="bold"), bg=utils.background_color, fg='white', borderwidth=0) for _ in range(19)] for _ in range(5)]
+        self.table: list = [[tk.Label(self, font=Font(family="Helvetica", size=12, weight="bold"), bg=utils.background_color, fg='white', bd=0) for _ in range(19)] for _ in range(5)]
         self.old_order = []
         self.descriptionLabel = DescriptionLabel(self.winfo_toplevel(), bg='black', foreground='white', anchor='nw')
 

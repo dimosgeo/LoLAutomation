@@ -5,12 +5,15 @@ from PIL import Image, ImageTk
 
 
 class ItemBuildFrame(tk.Frame):
-	def __init__(self, parent, title='', width: float = 0, height: float = 0, horizontal_space: float = 20, *args, **kwargs) -> None:
+	def __init__(self, parent, title='', width: float = 0, height: float = 0, horizontal_space: float = 20, title_width=None, *args, **kwargs) -> None:
 		tk.Frame.__init__(self, parent, *args, **kwargs)
 		self.width = width
 		self.height = height
-		self.font = Font(family='Helvetica', size=14, weight='bold')
-		self.title_width = self.font.measure(title) + 5
+		self.font = Font(family='Helvetica', size=16, weight='bold')
+		if not title_width:
+			self.title_width = self.font.measure(title) + 5
+		else:
+			self.title_width = title_width
 		self.title = tk.Label(self, text=title, font=self.font, width=self.title_width, anchor='w', bg=self['bg'], fg='white')
 		self.horizontal_space = horizontal_space
 		self.item_list = []

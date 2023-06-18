@@ -13,7 +13,7 @@ class RuneSheet(tk.Frame):
 		self.main_categories = RuneHeaderFrame(self, rune_list=rune_list[0], size=categories_size, horizontal_space=horizontal_space, background=utils.widget_color)
 		self.secondary_categories = RuneHeaderFrame(self, rune_list=rune_list[0], size=categories_size, horizontal_space=horizontal_space, background=utils.widget_color)
 		self.pages = [RuneFrame(self, page, keystone_size=keystone_size, rune_size=rune_size, horizontal_space=horizontal_space, is_primary=True, vertical_space=vertical_space, background=utils.widget_color) for page in rune_list[1:-1]]
-		self.small_runes = StatRunes(self, rune_list=rune_list[-1], rune_size=small_rune_size, background=utils.widget_color)
+		self.small_runes = StatRunes(self, rune_list=rune_list[-1], rune_size=small_rune_size, horizontal_space=15, background=utils.widget_color)
 		self.width = self.main_categories.width + self.secondary_categories.width - self.secondary_categories.size + self.categories_space * 3
 		self.height = self.secondary_categories.size + self.pages[0].height - keystone_size + self.small_runes.height + categories_space * 1
 

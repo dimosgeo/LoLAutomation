@@ -15,7 +15,6 @@ class App(Tk):
 		self.title('LOL Assistant')
 		self.protocol("WM_DELETE_WINDOW", self.on_closing)
 		self.configure(bg=utils.background_color)
-		# self.overrideredirect(True)
 		self.bind("<Configure>", self.events_handler)
 		self.resizable(width=False, height=False)
 
@@ -73,7 +72,7 @@ class App(Tk):
 				self.status_label['text'] = 'Waiting for champion pick.'
 				self.add_build()
 				self.show_message_label()
-				# self.backend.champion_id = 58#16 # TEST
+				# self.backend.champion_id = 53#16 # TEST
 				# self.load_data() # TEST
 			if status == 'CHAMPION_PICKED':
 				self.status_label.place_forget()
@@ -106,7 +105,6 @@ class App(Tk):
 
 	def on_closing(self):
 		self.backend.close()
-		# self.lolListener.join()
 		self.destroy()
 
 

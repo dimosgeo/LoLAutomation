@@ -9,17 +9,19 @@ class ChampionFrame(Frame):
 	def __init__(self, parent: Widget, width: float = 0, size: float = 0, backend=None,  name_size: int = 26, spell_size: int = 65, horizontal_spacing: int = 15, *args, **kwargs) -> None:
 		Frame.__init__(self, parent, *args, **kwargs)
 		self.width = width
+		self['bg'] = utils.palette[0]
 		self.spell_size = spell_size
 		self.backend = backend
 		self.height = size
 		self.spacing = Spacing(horizontal=horizontal_spacing)
 		self.champion_icon = None
+		self.champion_size = size - 10
 		self.champion_name = Label(self, text='', font=Font(family="Helvetica", size=name_size, weight="bold"), background=self['bg'], foreground='white', anchor='w')
 		self.champion_image = Button(self, background=self['bg'], activebackground=self['bg'], bd=0)
 		self.summonerSpellsFrame = SummonerSpellFrame(self, backend, size=self.spell_size, background=self['bg'])
 
 	def set_champion(self, name, image):
-		self.champion_icon = ImageTk.PhotoImage(Image.open(image).resize((int(self.height), int(self.height))))
+		self.champion_icon = ImageTk.PhotoImage(Image.open(image).resize((int(self.champion_size), int(self.champion_size))))
 		self.champion_image['image'] = self.champion_icon
 		self.champion_name['text'] = name
 		
@@ -27,8 +29,8 @@ class ChampionFrame(Frame):
 		self.summonerSpellsFrame.set_spells(spells)
 
 	def place(self, x=0, y=0):
-		super().place(x=x, y=y, width=self.width, height=self.height + 10)
-		self.champion_image.place(x=self.spacing.horizontal + 5, y=5, width=self.height, height=self.height)
+		super().place(x=x, y=y, width=self.width, height=self.height)
+		self.champion_image.place(x=self.spacing.horizontal + 5, y=5, width=self.champion_size, height=self.champion_size)
 		self.champion_name.place(x=self.height + self.spacing.horizontal * 2, y=5, height=self.height, width=340)
 		self.summonerSpellsFrame.place(x=self.width - self.summonerSpellsFrame.width - self.spacing.horizontal - 5, y=(self.height - self.summonerSpellsFrame.height)/2)
 
