@@ -1,4 +1,5 @@
 import time
+from utils.utils import Message
 from threading import Thread
 import requests.exceptions
 from queue import Queue
@@ -26,7 +27,7 @@ class LoLHandler(Thread):
 
             if self.client_state == 'CLOSED' and previous_state == 'OPEN':
                 print('Game closed.')
-                self.queue_out.put('GAME_CLOSED')
+                self.queue_out.put(Message('GAME_CLOSED'))
                 self.server_state = 'CLOSED'
                 self.champion_id = -1
                 self.url = ''
@@ -40,7 +41,7 @@ class LoLHandler(Thread):
 
             if self.server_state == 'OPEN' and previous_server_state == 'CLOSED':
                 print(f'Server is open at: {self.url}')
-                self.queue_out.put('GAME_OPENED')
+                self.queue_out.put(Message('GAME_OPENED'))
 
             if self.server_state == 'OPEN':
                 self.get_champion_picked()
@@ -49,10 +50,10 @@ class LoLHandler(Thread):
                 self.get_skin()
 
             if self.champion_id > 0 and self.champion_id != previous_champion:
-                self.queue_out.put('CHAMPION_PICKED')
+                self.queue_out.put(Message('CHAMPION_PICKED'))
 
             if self.champion_id > 0 and self.current_skin != previous_skin:
-                self.queue_out.put('CHANGED_SKIN')
+                self.queue_out.put(Message('CHANGED_SKIN', [self.current_skin]))
 
 
             time.sleep(.1)

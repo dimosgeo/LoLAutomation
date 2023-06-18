@@ -26,7 +26,7 @@ class Backend:
 
     def get_status(self):
         message = self.queue.get()
-        if message == 'GAME_OPENED':
+        if message.message_type == 'GAME_OPENED':
             self.url = self.lol_handler.url
             if self.allRunes is None:
                 self.allRunes = lolib.getRunes(self.url)
@@ -36,11 +36,10 @@ class Backend:
                 self.allItems = lolib.getItems(self.url)
             self.get_navigation_icons()
             self.create_default_mapping()
-        if message == 'CHAMPION_PICKED':
+        if message.message_type == 'CHAMPION_PICKED':
             self.champion_id = self.lol_handler.champion_id
-        if message == 'CHANGED_SKIN':
-            self.champion_skin = lolib.getSkins(self.url)['selectedSkinId']
-            # message.append(self.champion_skin)
+        if message.message_type == 'CHANGED_SKIN':
+            self.champion_skin = message.message[0]
         return message
 
     def get_runes(self):

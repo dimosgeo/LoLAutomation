@@ -66,7 +66,8 @@ class App(Tk):
 	def lol_listener(self):
 		self.show_message_label()
 		while True:
-			status = self.backend.get_status()
+			message = self.backend.get_status()
+			status = message.message_type
 			if status == 'PROCESS_CLOSED':
 				break
 			if status == 'GAME_OPENED':
@@ -84,8 +85,8 @@ class App(Tk):
 				self.build.place_forget()
 				self.scrollbar.place_forget()
 				self.show_message_label()
-			# if status == 'CHANGED_SKIN':
-			# 	self.build.select_skin(status.message[0])
+			if status == 'CHANGED_SKIN':
+				self.build.select_skin(message.message[0])
 
 	def show_message_label(self):
 		self.status_label_width = self.status_font.measure(self.status_label['text'])
