@@ -9,8 +9,9 @@ from PIL import Image, ImageTk
 
 
 class App(Tk):
-	def __init__(self):
+	def __init__(self, development_mode=False):
 		Tk.__init__(self)
+		self.dev_mode = development_mode
 		self.start = time.time()
 		self.title('LOL Assistant')
 		self.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -20,7 +21,7 @@ class App(Tk):
 
 		self.icon = ImageTk.PhotoImage(Image.open('images/icon.png'))
 		self.iconbitmap(default='images/icon.png')
-		self.backend = Backend()
+		self.backend = Backend(development_mode)
 		self.build = None
 		self.scrollbar = None
 		self.navigation_images = None
@@ -72,8 +73,9 @@ class App(Tk):
 				self.status_label['text'] = 'Waiting for champion pick.'
 				self.add_build()
 				self.show_message_label()
-				# self.backend.champion_id = 53#16 # TEST
-				# self.load_data() # TEST
+				if self.dev_mode:
+					self.backend.champion_id = 53#16
+					self.load_data()
 			if status == 'CHAMPION_PICKED':
 				self.status_label.place_forget()
 				self.load_data()

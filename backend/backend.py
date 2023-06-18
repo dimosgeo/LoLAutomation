@@ -8,7 +8,8 @@ import backend.data_scrape as ds
 
 
 class Backend:
-    def __init__(self):
+    def __init__(self, development_mode=False):
+        self.dev_mode = development_mode
         self.queue = Queue(maxsize=10)
         self.lol_handler = LoLHandler(self.queue)
         self.lol_handler.start()
@@ -66,8 +67,10 @@ class Backend:
             return True, championLane, build
 
         champion_info = lolib.getChampionInfo(self.url, self.champion_id)
-        queueName = lolib.getQueueSpecialName(self.url)
-        # queueName = '' # TEST
+        
+        queueName = ''
+        if not self.dev_mode:
+            queueName = lolib.getQueueSpecialName(self.url)
 
         champion = dict()
         champion['build'] = {}
