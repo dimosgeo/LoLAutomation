@@ -41,7 +41,8 @@ class SkinChooser(tk.Frame):
 				self.skins[skin_id].pick_skin()
 
 	def clear_pick(self):
-		self.skins[self.selected_id].unpick_skin()
+		if self.selected_id != -1:
+			self.skins[self.selected_id].unpick_skin()
 		self.selected_id = -1
 
 
