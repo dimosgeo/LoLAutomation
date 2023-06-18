@@ -92,6 +92,7 @@ def checkIfChampionSelect(url):
 def getPerks(url):
 	path = url+"/lol-perks/v1/perks"
 	r = requests.get(path, verify=False).json()
+	
 	perks = {}
 	for perk in r:
 		perks[perk['id']] = {'iconPath': perk['iconPath']}
@@ -102,10 +103,13 @@ def getRunes(url):
 	path = url+"/lol-perks/v1/styles"
 	r = requests.get(path, verify=False).json()	
 
+	#Precision, Domination, Sorcery, Inspiration, Resolve
+	rune_colors = {8000:[200, 170, 110], 8100:[220, 71, 71], 8200:[108, 117, 245], 8300:[72, 180, 190], 8400:[164, 208, 141]}
 	runes = {}
 	for s in r:
 		slots = [x['perks'] for x in s['slots']]
-		runes[s['id']] = {'slots': slots, 'iconPath': s['iconPath']}
+		runes[s['id']] = {'slots': slots, 'iconPath': s['assetMap']['svg_icon'], 'color':rune_colors[s['id']]}
+		print(runes[s['id']])
 	return runes
 
 
@@ -238,8 +242,8 @@ def getFullRunePageImages(url):
 
 def main():
 	url = get_client_url()
-	# print(getRunes(url))
-	print(getItems(url))
+	getRunes(url)
+	# print(getItems(url))
 
 
 if __name__ == '__main__':
