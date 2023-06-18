@@ -212,12 +212,37 @@ def getSummonerId(url):
 	return {'sid': r['summonerId'], 'name': r['displayName']}
 
 
-def getCurrentchampion(server_url):
-	path = "/lol-champ-select/v1/current-champion"
-	r = requests.get(server_url + path, verify=False)
+def getSpellsIds(url):
+	path = url+"/lol-champ-select/v1/session/"
+	r = requests.get(path, verify=False).json()
+	
+	sid = getSummonerId(url)['sid']
+
+	for player in r['myTeam']:
+		if player['summonerId'] == sid:
+			return [player['spell1Id'], player['spell2Id']]
+	
+	return [0, 0]
+
+
+def getCurrentchampion(url):
+	path = "/lol-champ-select/v1/session"
+	r = requests.get(url + path, verify=False)
 	if r.status_code != 200:
 		return -1
-	return r.json()
+	r = r.json()
+	sid = getSummonerId(url)['sid']
+	my_cell = 0 
+	for player in r['myTeam']:
+		if player['summonerId'] == sid:
+			my_cell = player['cellId']
+
+	action_cell = dict()
+	for cell in r['actions'][0]:
+		if my_cell == cell['actorCellId'] and cell['completed']:
+			return cell['championId']
+
+	return -1 
 
 
 def getChampionInfo(url, cid):
@@ -256,7 +281,7 @@ def getSkins(url):
 
 	path = url+"/lol-game-data/assets/v1/champions/"+str(selectedChampion)+".json"
 	skins = requests.get(path, verify=False).json()['skins']
-	availableSkins = [{skin['id']:skin['uncenteredSplashPath']} for skin in skins if skin['id'] in all_skins or skin['isBase']]
+	availableSkins = {skin['id']: getImageFromUrl(url,skin['uncenteredSplashPath']) for skin in skins if skin['id'] in all_skins or skin['isBase']}
 	
 	return {"selectedSkinId": selectedSkin, "availableSkins": availableSkins}
 

@@ -30,7 +30,6 @@ class Build(tk.Frame):
 		self.height = int(self.champion_frame.height + self.data.height + self.rune_sheet.height + vertical_space)#+ self.abilities.height + self.starting_items.height + self.full_build.height + 6 * vertical_space
 		self.skins = SkinChooser(self, width=self.abilities.width, height=self.height - self.champion_frame.height - self.abilities.height - self.starting_items.height - self.full_build.height - 5 * self.spacing.vertical)
 		# self.skins.set_skins({'selectedSkinId': 1, 'availableSkins': [{'id': i, 'image': r"C:\Users\NickPC\Documents\GitHub\LoLAutomation\images\53021.jpg"} for i in range(4)]})
-		self.skins.set_skins(self.backend.get_skins())
 		self.previous_selected = ''
 	
 	def set_champion(self, champion) -> None:
@@ -39,6 +38,7 @@ class Build(tk.Frame):
 		self.champion_frame.set_champion(champion['name'], champion['image'])
 		self.abilities.set_abilities(champion['abilities'])
 		self.select_lane(champion['default_lane'])
+		self.skins.set_skins(self.backend.get_skins())
 	
 	def select_lane(self, lane: str) -> None:
 		if self.champion is None:
@@ -80,6 +80,9 @@ class Build(tk.Frame):
 		self.starting_items.place_forget()
 		self.full_build.place_forget()
 		self.data.place_forget()
+
+	def select_skin(self, skinid):
+		self.skins.select_skin(skinid)
 
 
 class ControlFrame(tk.Frame):

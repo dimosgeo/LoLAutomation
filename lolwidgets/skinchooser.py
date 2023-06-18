@@ -28,13 +28,17 @@ class SkinChooser(tk.Frame):
 			self.skins[skin].place_forget()
 
 	def set_skins(self, skins_list):
+		for skin in self.skins:
+			self.skins[skin].place_forget()
+
 		self.skins = dict()
 		self.selected_id = skins_list['selectedSkinId']
-		for skin in skins_list['availableSkins']:
-			self.skins[skin['id']] = SkinButton(self, skin['id'], self.height - 10, skin['image'], bg='green', bd=0)
-			self.skins[skin['id']].bind('<MouseWheel>', self.skins[skin['id']].scroll)
-			if self.selected_id == skin['id']:
-				self.skins[skin['id']].pick_skin()
+
+		for skin_id, skin in skins_list['availableSkins'].items():
+			self.skins[skin_id] = SkinButton(self, skin_id, self.height - 10, skin, bg='green', bd=0)
+			self.skins[skin_id].bind('<MouseWheel>', self.skins[skin_id].scroll)
+			if self.selected_id == skin_id:
+				self.skins[skin_id].pick_skin()
 
 	def clear_pick(self):
 		self.skins[self.selected_id].unpick_skin()
@@ -42,11 +46,15 @@ class SkinChooser(tk.Frame):
 
 
 	def scroll_listener(self, e):
-		self.scroll = max(min(0, self.scroll + e.delta), - len(self.skins) * (self.horizontal_spacing + self.skins[0].width) + self.width - self.horizontal_spacing)
+		self.scroll = max(min(0, self.scroll + e.delta), - len(self.skins) * (self.horizontal_spacing + self.skins[self.selected_id].width) + self.width - self.horizontal_spacing)
 		x=self.winfo_x()
 		y=self.winfo_y()
 		self.place_forget()
 		self.place(x=x, y=y)
+
+	def select_skin(self, skinid):
+		self.clear_pick()
+		self.skins[skinid].pick_skin()
 
 
 class SkinButton(tk.Button):

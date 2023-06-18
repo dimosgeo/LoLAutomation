@@ -38,14 +38,18 @@ class Backend:
             self.create_default_mapping()
         if message == 'CHAMPION_PICKED':
             self.champion_id = self.lol_handler.champion_id
+        if message == 'CHANGED_SKIN':
+            self.champion_skin = lolib.getSkins(self.url)['selectedSkinId']
+            # message.append(self.champion_skin)
         return message
 
     def get_runes(self):
         return lolib.getFullRunePageImages(self.url)
 
     def swap_spells(self) -> None:
+        spells = lolib.getSpellsIds(self.url)
+        lolib.setSpells(self.url, spells[::-1])
         self.primary_spell_f = not self.primary_spell_f
-        print('swapped')
 
     def get_navigation_icons(self):
         self.navigation_icons['lane_navigation'] = {lane : {'disabled': f'images/{lane}_disabled.png', 'enabled': f'images/{lane}.png'} for lane in utils.lanes}
@@ -134,12 +138,15 @@ class Backend:
         return complete_runes
 
     def set_everything(self, champion):
-        lolib.setSpells(self.url, champion['spells'])
+        if not self.primary_spell_f:
+            lolib.setSpells(self.url, champion['spells'][::-1])
+        else:
+            lolib.setSpells(self.url, champion['spells'])
         lolib.setRunes(self.url, champion['runes'])
         lolib.updateItemSet(self.url, champion['start_items'], champion['best_items'])
 
     def set_active_skin(self, skin_id):
-        lolib.setSkin(skin_id)
+        lolib.setSkin(self.url, skin_id)
 
     def get_skins(self):
         return lolib.getSkins(self.url)

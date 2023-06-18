@@ -11,6 +11,7 @@ class LoLHandler(Thread):
         self.queue_out = queue_out
         self.loop = True
         self.champion_id = -1
+        self.current_skin = 0
         self.client_state = 'CLOSED'
         self.server_state = 'CLOSED'
         self.url = ''
@@ -20,6 +21,7 @@ class LoLHandler(Thread):
             previous_state = self.client_state
             previous_server_state = self.server_state
             previous_champion = self.champion_id
+            previous_skin = self.current_skin
             self.check_client_status()
 
             if self.client_state == 'CLOSED' and previous_state == 'OPEN':
@@ -43,8 +45,16 @@ class LoLHandler(Thread):
             if self.server_state == 'OPEN':
                 self.get_champion_picked()
 
+            if self.champion_id > 0:
+                self.get_skin()
+
             if self.champion_id > 0 and self.champion_id != previous_champion:
                 self.queue_out.put('CHAMPION_PICKED')
+
+            if self.champion_id > 0 and self.current_skin != previous_skin:
+                self.queue_out.put('CHANGED_SKIN')
+
+
             time.sleep(.1)
         self.queue_out.put('PROCESS_CLOSED')
         print('Process closed')
@@ -72,3 +82,6 @@ class LoLHandler(Thread):
 
     def check_client_status(self):
         self.client_state = 'OPEN' if lolib.getClientStatus() else 'CLOSED'
+
+    def get_skin(self):
+        self.current_skin = lolib.getSkins(self.url)['selectedSkinId']

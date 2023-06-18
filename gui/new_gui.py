@@ -84,6 +84,8 @@ class App(Tk):
 				self.build.place_forget()
 				self.scrollbar.place_forget()
 				self.show_message_label()
+			# if status == 'CHANGED_SKIN':
+			# 	self.build.select_skin(status.message[0])
 
 	def show_message_label(self):
 		self.status_label_width = self.status_font.measure(self.status_label['text'])
