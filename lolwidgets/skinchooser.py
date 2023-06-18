@@ -10,33 +10,39 @@ class SkinChooser(tk.Frame):
 		self.width = width
 		self['bg'] = utils.palette[0]
 		self.skins = dict()
+		self.skin_list = []
 		self.bind('<MouseWheel>', self.scroll_listener)
 		self.scroll = 0
 		self.selected_id = -1
+		self.image_length = 0
 
 	def place(self, x=0, y=0):
 		super().place(x=x, y=y, height=self.height, width=self.width)
 		x = self.scroll
-		for skin in self.skins:
+		for skin in self.skin_list:
 			x += self.horizontal_spacing
 			self.skins[skin].place(x=x, y=5)
 			x += self.skins[skin].width
 
 	def place_forget(self):
 		super().place_forget()
-		for skin in self.skins:
+		for skin in self.skin_list:
 			self.skins[skin].place_forget()
 
 	def set_skins(self, skins_list):
-		for skin in self.skins:
+		for skin in self.skin_list:
 			self.skins[skin].place_forget()
 
 		self.skins = dict()
+		self.skin_list = []
 		self.selected_id = skins_list['selectedSkinId']
+		self.image_length = 0
 
 		for skin_id, skin in skins_list['availableSkins'].items():
 			self.skins[skin_id] = SkinButton(self, skin_id, self.height - 10, skin, bg='green', bd=0)
 			self.skins[skin_id].bind('<MouseWheel>', self.skins[skin_id].scroll)
+			self.skin_list.append(skin_id)
+			self.image_length += self.skins[skin_id].width
 			if self.selected_id == skin_id:
 				self.skins[skin_id].pick_skin()
 
@@ -47,13 +53,19 @@ class SkinChooser(tk.Frame):
 
 
 	def scroll_listener(self, e):
-		self.scroll = max(min(0, self.scroll + e.delta), - len(self.skins) * (self.horizontal_spacing + self.skins[self.selected_id].width) + self.width - self.horizontal_spacing)
+		self.scroll = max(min(0, self.scroll + e.delta), - (len(self.skins) + 1) * self.horizontal_spacing - self.image_length + self.width)
 		x=self.winfo_x()
 		y=self.winfo_y()
 		self.place_forget()
 		self.place(x=x, y=y)
 
 	def select_skin(self, skinid):
+		delta = -(self.skin_list.index(skinid) / len(self.skin_list)) * self.image_length - (self.skin_list.index(skinid) * self.horizontal_spacing) - self.horizontal_spacing 
+		self.scroll = max(min(0, delta), - (len(self.skins) + 1) * self.horizontal_spacing - self.image_length + self.width)
+		x=self.winfo_x()
+		y=self.winfo_y()
+		self.place_forget()
+		self.place(x=x, y=y)
 		self.clear_pick()
 		self.skins[skinid].pick_skin()
 

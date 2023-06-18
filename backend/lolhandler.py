@@ -57,7 +57,7 @@ class LoLHandler(Thread):
 
 
             time.sleep(.1)
-        self.queue_out.put('PROCESS_CLOSED')
+        self.queue_out.put(Message('PROCESS_CLOSED'))
         print('Process closed')
 
     def loop_stop(self):
