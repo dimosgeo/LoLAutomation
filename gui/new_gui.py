@@ -1,6 +1,6 @@
 import time
 from utils import utils
-from tkinter import Tk, Label
+from tkinter import Tk, Label, ttk
 from tkinter.font import Font
 from backend import Backend
 from lolwidgets import Spacing, Padding, Build, PingLabel, MyScrollBar, WindowNavigation

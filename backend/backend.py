@@ -137,3 +137,9 @@ class Backend:
         lolib.setSpells(self.url, champion['spells'])
         lolib.setRunes(self.url, champion['runes'])
         lolib.updateItemSet(self.url, champion['start_items'], champion['best_items'])
+
+    def set_active_skin(self, skin_id):
+        lolib.setSkin(skin_id)
+
+    def get_skins(self):
+        return lolib.getSkins(self.url)

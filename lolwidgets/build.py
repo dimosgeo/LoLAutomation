@@ -6,6 +6,7 @@ from lolwidgets.runepage import RuneSheet
 from lolwidgets.championcard import ChampionFrame
 from lolwidgets.abilities import AbilitiesTable
 from lolwidgets.items import ItemBuildFrame
+from lolwidgets.skinchooser import SkinChooser
 from lolwidgets.utils import *
 
 
@@ -16,7 +17,7 @@ class Build(tk.Frame):
 		self.backend = backend
 		self.spacing = Spacing(vertical=vertical_space, horizontal=horizontal_space)
 
-		self.rune_sheet = RuneSheet(self, self.backend.get_runes(), vertical_space=10)
+		self.rune_sheet = RuneSheet(self, self.backend.get_runes(), vertical_space=15)
 		self.abilities = AbilitiesTable(self, cell_size=int((self.rune_sheet.width - ability_cell_size) / 19), border_size=2)
 		self.width = int(self.rune_sheet.width + self.abilities.width + self.spacing.horizontal * 3)
 		self.champion_frame = ChampionFrame(self, width=self.width, size=champion_frame_size, backend=self.backend, background=self['bg'])
@@ -25,7 +26,11 @@ class Build(tk.Frame):
 		self.starting_items = ItemBuildFrame(self, title='Starting Items', width=self.rune_sheet.width, height=item_size, title_width=150, background=self['bg'])
 		self.full_build = ItemBuildFrame(self, title='Full Build', width=self.rune_sheet.width, height=item_size, title_width=150, background=self['bg'])
 
+
 		self.height = int(self.champion_frame.height + self.data.height + self.rune_sheet.height + vertical_space)#+ self.abilities.height + self.starting_items.height + self.full_build.height + 6 * vertical_space
+		self.skins = SkinChooser(self, width=self.abilities.width, height=self.height - self.champion_frame.height - self.abilities.height - self.starting_items.height - self.full_build.height - 5 * self.spacing.vertical)
+		# self.skins.set_skins({'selectedSkinId': 1, 'availableSkins': [{'id': i, 'image': r"C:\Users\NickPC\Documents\GitHub\LoLAutomation\images\53021.jpg"} for i in range(4)]})
+		self.skins.set_skins(self.backend.get_skins())
 		self.previous_selected = ''
 	
 	def set_champion(self, champion) -> None:
@@ -57,12 +62,15 @@ class Build(tk.Frame):
 		self.data.place(x=self.spacing.horizontal, y=y)
 		y += self.data.height
 		self.rune_sheet.place(x=self.spacing.horizontal, y=y)
-
-		self.abilities.place(x=self.spacing.horizontal * 2 + self.rune_sheet.width, y=y)
+		x = self.spacing.horizontal * 2 + self.rune_sheet.width
+		y = self.champion_frame.height + self.spacing.vertical
+		self.abilities.place(x=x, y=y)
 		y += self.abilities.height + self.spacing.vertical
-		self.starting_items.place(x=self.spacing.horizontal *2 + self.rune_sheet.width, y=y)
+		self.starting_items.place(x=x, y=y)
 		y += self.starting_items.height + self.spacing.vertical
-		self.full_build.place(x=self.spacing.horizontal * 2 + self.rune_sheet.width, y=y)
+		self.full_build.place(x=x, y=y)
+		y += self.full_build.height + self.spacing.vertical
+		self.skins.place(x=x, y=y)
 
 	def place_forget(self) -> None:
 		super().place_forget()

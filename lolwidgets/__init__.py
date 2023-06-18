@@ -7,4 +7,5 @@ from lolwidgets.runepage import RuneSheet
 from lolwidgets.utils import *
 from lolwidgets.descriptionLabel import DescriptionLabel 
 from lolwidgets.ping_label import PingLabel
+from lolwidgets.skinchooser import SkinChooser
 from lolwidgets.windowNavigation import WindowNavigation

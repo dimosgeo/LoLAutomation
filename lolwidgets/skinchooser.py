@@ -1,0 +1,86 @@
+import tkinter as tk
+from PIL import Image, ImageTk
+from utils import utils
+
+class SkinChooser(tk.Frame):
+	def __init__(self, parent, width, height, horizontal_space=5, *args, **kwargs) -> None:
+		tk.Frame.__init__(self, parent, *args, **kwargs)
+		self.horizontal_spacing = horizontal_space
+		self.height = height
+		self.width = width
+		self['bg'] = utils.palette[0]
+		self.skins = dict()
+		self.bind('<MouseWheel>', self.scroll_listener)
+		self.scroll = 0
+		self.selected_id = -1
+
+	def place(self, x=0, y=0):
+		super().place(x=x, y=y, height=self.height, width=self.width)
+		x = self.scroll
+		for skin in self.skins:
+			x += self.horizontal_spacing
+			self.skins[skin].place(x=x, y=5)
+			x += self.skins[skin].width
+
+	def place_forget(self):
+		super().place_forget()
+		for skin in self.skins:
+			self.skins[skin].place_forget()
+
+	def set_skins(self, skins_list):
+		self.skins = dict()
+		self.selected_id = skins_list['selectedSkinId']
+		for skin in skins_list['availableSkins']:
+			self.skins[skin['id']] = SkinButton(self, skin['id'], self.height - 10, skin['image'], bg='green', bd=0)
+			self.skins[skin['id']].bind('<MouseWheel>', self.skins[skin['id']].scroll)
+			if self.selected_id == skin['id']:
+				self.skins[skin['id']].pick_skin()
+
+	def clear_pick(self):
+		self.skins[self.selected_id].unpick_skin()
+		self.selected_id = -1
+
+
+	def scroll_listener(self, e):
+		self.scroll = max(min(0, self.scroll + e.delta), - len(self.skins) * (self.horizontal_spacing + self.skins[0].width) + self.width - self.horizontal_spacing)
+		x=self.winfo_x()
+		y=self.winfo_y()
+		self.place_forget()
+		self.place(x=x, y=y)
+
+
+class SkinButton(tk.Button):
+	def __init__(self, parent, skin_id, height, image, *args, **kwargs):
+		tk.Button.__init__(self, parent, *args, **kwargs)
+		self.parent = parent
+		self.sid = skin_id
+		self['activebackground'] = self['bg']
+		self.height = height
+		self.icon = Image.open(image)
+		w, h = self.icon.size
+		self.width = int(w * (self.height / h))
+		icon = self.icon.resize((self.width, self.height))
+		self.img = ImageTk.PhotoImage(icon)
+		self['image'] = self.img
+		self['command'] = self.select_skin
+	def place(self, x=0, y=0):
+		super().place(x=x, y=y, width=self.width, height=self.height)
+
+	def scroll(self, e):
+		self.parent.scroll_listener(e)
+
+	def select_skin(self):
+		self.winfo_toplevel().backend.set_active_skin(self.sid)
+		self.pick_skin()
+
+	def pick_skin(self):
+		pil_image = self.icon.resize((self.width-6, self.height-6))
+		self.master.clear_pick()
+		self.master.selected_id = self.sid
+		self.img = ImageTk.PhotoImage(pil_image)
+		self['image'] = self.img
+
+	def unpick_skin(self):
+		pil_image = self.icon.resize((self.width, self.height))
+		self.img = ImageTk.PhotoImage(pil_image)
+		self['image'] = self.img
