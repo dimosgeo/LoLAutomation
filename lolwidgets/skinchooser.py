@@ -65,6 +65,8 @@ class SkinChooser(tk.Frame):
 		# self.place(x=x, y=y)
 
 	def select_skin(self, skin_id):
+		if not skin_id in self.skin_list:
+			return
 		delta = -(self.skin_list.index(skin_id) / len(self.skin_list)) * self.image_length - (self.skin_list.index(skin_id) * self.horizontal_spacing) + self.horizontal_spacing 
 		self.scroll = max(min(0, delta), - (len(self.skins) + 1) * self.horizontal_spacing - self.image_length + self.width)
 		x=self.winfo_x()
