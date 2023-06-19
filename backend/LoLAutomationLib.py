@@ -226,21 +226,29 @@ def getSpellsIds(url):
 
 
 def getCurrentchampion(url):
-	path = "/lol-champ-select/v1/session"
-	r = requests.get(url + path, verify=False)
-	if r.status_code != 200:
-		return -1
-	r = r.json()
-	sid = getSummonerId(url)['sid']
-	my_cell = 0 
-	for player in r['myTeam']:
-		if player['summonerId'] == sid:
-			my_cell = player['cellId']
+	path = "/lol-champ-select/v1/pin-drop-notification"
+	r = requests.get(url + path, verify=False).json()
 
-	action_cell = dict()
-	for cell in r['actions'][0]:
-		if my_cell == cell['actorCellId'] and cell['completed']:
-			return cell['championId']
+	me = -1
+	for player in r['pinDropSummoners']:
+		if player['isLocalSummoner']:
+			me = player['slotId']
+			break
+
+	if me == -1:
+		return -1
+
+	path = f"/lol-champ-select/v1/summoners/{me}"
+	r = requests.get(url + path, verify=False).json()
+
+	path = url+"/lol-champ-select/v1/skin-selector-info"
+	selectedChampion = requests.get(path, verify=False).json()['selectedChampionId']
+
+	if selectedChampion!=r['championId']:
+		return -1
+
+	if r['areSummonerActionsComplete'] and r['championId']>0:
+		return r['championId']
 
 	return -1 
 
@@ -279,7 +287,7 @@ def getSkins(url):
 	path = url+"/lol-champ-select/v1/pickable-skin-ids"
 	all_skins = requests.get(path, verify=False).json()
 
-	path = url+"/lol-game-data/assets/v1/champions/"+str(selectedChampion)+".json"
+	path = url+f"/lol-game-data/assets/v1/champions/{selectedChampion}.json"
 	skins = requests.get(path, verify=False).json()['skins']
 	availableSkins = {skin['id']: getImageFromUrl(url,skin['uncenteredSplashPath']) for skin in skins if skin['id'] in all_skins or skin['isBase']}
 	
