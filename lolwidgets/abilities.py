@@ -20,7 +20,7 @@ class AbilitiesTable(tk.Frame):
 
         for index, cell in enumerate(self.table[0][1:], start=1):
             cell['text'] = index
-            cell['bg'] = utils.palette[0]#'#808080'
+            cell['bg'] = utils.palette[0]
 
     def set_abilities(self, ability_list) -> None:
         for cell in range(5):
@@ -48,24 +48,27 @@ class AbilitiesTable(tk.Frame):
     def place(self, x=0, y=0):
         super().place(x=x, y=y, height=self.height, width=self.width)
         y = self.border_size
+
         for row in self.table:
             x = self.border_size
+        
             for cell in row:
                 cell.place(x=x, y=y, width=self.cell_size, height=self.cell_size)
                 x += self.cell_size + self.border_size
+        
             y += self.cell_size + self.border_size
 
 
-class AbilityCell(tk.Frame):
-    def __init__(self, parent, size: float, *args, **kwargs) -> None:
-        tk.Frame.__init__(self, parent, *args, **kwargs)
-        self.content = tk.Label(self, font=Font(family="Helvetica", size=12), bg=self['bg'])
-        self.size = size
+# class AbilityCell(tk.Frame):
+#     def __init__(self, parent, size: float, *args, **kwargs) -> None:
+#         tk.Frame.__init__(self, parent, *args, **kwargs)
+#         self.content = tk.Label(self, font=Font(family="Helvetica", size=12), bg=self['bg'])
+#         self.size = size
 
-    def place(self, x=0, y=0):
-        super().place(x=x, y=y, width=self.size, height=self.size)
-        if self.content is not None:
-            self.content.place(x=0, y=0, width=self.size, height=self.size)
+#     def place(self, x=0, y=0):
+#         super().place(x=x, y=y, width=self.size, height=self.size)
+#         if self.content is not None:
+#             self.content.place(x=0, y=0, width=self.size, height=self.size)
 
 
 class AbilityIcon(tk.Button):

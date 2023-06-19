@@ -26,14 +26,12 @@ class LoLHandler(Thread):
             self.check_client_status()
 
             if self.client_state == 'CLOSED' and previous_state == 'OPEN':
-                print('Game closed.')
                 self.queue_out.put(Message('GAME_CLOSED'))
                 self.server_state = 'CLOSED'
                 self.champion_id = -1
                 self.url = ''
 
             if self.client_state == 'OPEN' and previous_state == 'CLOSED':
-                print('Game is open.')
                 self.get_client_url()
 
             if self.client_state == 'OPEN' and self.server_state == 'CLOSED':
@@ -54,7 +52,6 @@ class LoLHandler(Thread):
 
             if self.champion_id > 0 and self.current_skin != previous_skin:
                 self.queue_out.put(Message('CHANGED_SKIN', [self.current_skin]))
-
 
             time.sleep(.1)
         self.queue_out.put(Message('PROCESS_CLOSED'))

@@ -11,10 +11,10 @@ from lolwidgets.utils import *
 
 
 class Build(tk.Frame):
-	def __init__(self, parent, backend, vertical_space: int = 20, horizontal_space: float = 20, ability_cell_size: int = 40, champion_frame_size: int = 110, item_size: float = 64, control_bar_font_size: int = 16, *args, **kwargs) -> None:
+	def __init__(self, parent, vertical_space: int = 20, horizontal_space: float = 20, ability_cell_size: int = 40, champion_frame_size: int = 110, item_size: float = 64, control_bar_font_size: int = 16, *args, **kwargs) -> None:
 		tk.Frame.__init__(self, parent, *args, **kwargs)
 		self.champion = None
-		self.backend = backend
+		self.backend = self.winfo_toplevel().backend
 		self.spacing = Spacing(vertical=vertical_space, horizontal=horizontal_space)
 
 		self.rune_sheet = RuneSheet(self, self.backend.get_runes(), vertical_space=15)
@@ -26,10 +26,8 @@ class Build(tk.Frame):
 		self.starting_items = ItemBuildFrame(self, title='Starting Items', width=self.rune_sheet.width, height=item_size, title_width=150, background=self['bg'])
 		self.full_build = ItemBuildFrame(self, title='Full Build', width=self.rune_sheet.width, height=item_size, title_width=150, background=self['bg'])
 
-
-		self.height = int(self.champion_frame.height + self.data.height + self.rune_sheet.height + vertical_space)#+ self.abilities.height + self.starting_items.height + self.full_build.height + 6 * vertical_space
+		self.height = int(self.champion_frame.height + self.data.height + self.rune_sheet.height + vertical_space)
 		self.skins = SkinChooser(self, width=self.abilities.width, height=self.height - self.champion_frame.height - self.abilities.height - self.starting_items.height - self.full_build.height - 5 * self.spacing.vertical)
-		# self.skins.set_skins({'selectedSkinId': 1, 'availableSkins': [{'id': i, 'image': r"C:\Users\NickPC\Documents\GitHub\LoLAutomation\images\53021.jpg"} for i in range(4)]})
 		self.previous_selected = ''
 	
 	def set_champion(self, champion) -> None:
@@ -187,7 +185,6 @@ class LaneFrame(tk.Frame):
 class LaneButton(tk.Button):
 	def __init__(self, parent, active_icon, inactive_icon, size: int, lane: str, func: callable = lambda *args: None, *args, **kwargs):
 		tk.Button.__init__(self, parent, *args, **kwargs)
-		# image = Image.open(icon).resize((size, size))
 		self.size = size
 		self.lane = lane
 		self.is_active = False

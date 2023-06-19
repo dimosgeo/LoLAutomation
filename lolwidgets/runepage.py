@@ -9,6 +9,7 @@ class RuneSheet(tk.Frame):
 		tk.Frame.__init__(self, parent, *args, **kwargs)
 		self.categories_space = categories_space
 		self.previous_active = [-1, -1]
+		self['bg'] = utils.widget_color
 		self.bg_label = tk.Label(self, bg=utils.widget_color)
 		self.main_categories = RuneHeaderFrame(self, rune_list=rune_list[0], size=categories_size, horizontal_space=horizontal_space, background=utils.widget_color)
 		self.secondary_categories = RuneHeaderFrame(self, rune_list=rune_list[0], size=categories_size, horizontal_space=horizontal_space, background=utils.widget_color)
@@ -19,7 +20,14 @@ class RuneSheet(tk.Frame):
 
 	def place(self, x=0, y=0):
 		super().place(x=x, y=y, width=self.width, height=self.height)
-		self.bg_label.place(x=0, y=0, width=self.width, height=self.height)
+		# self.bg_label.place(x=0, y=0, width=self.width, height=self.height)
+
+	def place_forget(self):
+		super().place_forget()
+		self.main_categories.place_forget()
+		self.secondary_categories.place_forget()
+		self.pages.place_forget()
+		self.small_runes.place_forget()
 
 	def clear_pages(self):
 		if self.previous_active[0] >= 0:

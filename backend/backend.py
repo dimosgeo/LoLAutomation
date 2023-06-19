@@ -107,6 +107,7 @@ class Backend:
     def create_default_mapping(self):
         if len(self.rune_mapping) > 0:
             return
+
         for key in self.allRunes:
             for row_num, row in enumerate(self.allRunes[key]['slots'], start=1):
                 number = row_num
@@ -114,6 +115,7 @@ class Backend:
                     number -= 5
                 for index, rune in enumerate(row):
                     self.rune_mapping[rune] = (number, index)
+
         self.rune_mapping[8000] = (0, 0)
         self.rune_mapping[8100] = (0, 1)
         self.rune_mapping[8200] = (0, 2)
@@ -127,13 +129,17 @@ class Backend:
                 result = [-1 for _ in range(5)]
             else:
                 result = [-1 for _ in range(3)]
+            
             for row, rune in enumerate(part):
                 data = self.rune_mapping[rune]
+                
                 if index == 2:
                     result[row] = data[1]
                 else:
                     result[data[0]] = data[1]
+            
             complete_runes.append(result)
+
         return complete_runes
 
     def set_everything(self, champion):
@@ -141,6 +147,7 @@ class Backend:
             lolib.setSpells(self.url, champion['spells'][::-1])
         else:
             lolib.setSpells(self.url, champion['spells'])
+
         lolib.setRunes(self.url, champion['runes'])
         lolib.updateItemSet(self.url, champion['start_items'], champion['best_items'])
 

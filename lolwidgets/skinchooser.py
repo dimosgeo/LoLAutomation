@@ -18,6 +18,9 @@ class SkinChooser(tk.Frame):
 
 	def place(self, x=0, y=0):
 		super().place(x=x, y=y, height=self.height, width=self.width)
+		self.place_tiles()
+
+	def place_tiles(self):
 		x = self.scroll
 		for skin in self.skin_list:
 			x += self.horizontal_spacing
@@ -26,13 +29,14 @@ class SkinChooser(tk.Frame):
 
 	def place_forget(self):
 		super().place_forget()
+		self.place_forget_tiles()
+
+	def place_forget_tiles(self):
 		for skin in self.skin_list:
 			self.skins[skin].place_forget()
 
 	def set_skins(self, skins_list):
-		for skin in self.skin_list:
-			self.skins[skin].place_forget()
-
+		self.place_forget_tiles()
 		self.skins = dict()
 		self.skin_list = []
 		self.selected_id = skins_list['selectedSkinId']
@@ -51,39 +55,41 @@ class SkinChooser(tk.Frame):
 			self.skins[self.selected_id].unpick_skin()
 		self.selected_id = -1
 
-
 	def scroll_listener(self, e):
 		self.scroll = max(min(0, self.scroll + e.delta), - (len(self.skins) + 1) * self.horizontal_spacing - self.image_length + self.width)
-		x=self.winfo_x()
-		y=self.winfo_y()
-		self.place_forget()
-		self.place(x=x, y=y)
+		self.place_forget_tiles()
+		self.place_tiles()
+		# x=self.winfo_x()
+		# y=self.winfo_y()
+		# self.place_forget()
+		# self.place(x=x, y=y)
 
-	def select_skin(self, skinid):
-		delta = -(self.skin_list.index(skinid) / len(self.skin_list)) * self.image_length - (self.skin_list.index(skinid) * self.horizontal_spacing) - self.horizontal_spacing 
+	def select_skin(self, skin_id):
+		delta = -(self.skin_list.index(skin_id) / len(self.skin_list)) * self.image_length - (self.skin_list.index(skin_id) * self.horizontal_spacing) + self.horizontal_spacing 
 		self.scroll = max(min(0, delta), - (len(self.skins) + 1) * self.horizontal_spacing - self.image_length + self.width)
 		x=self.winfo_x()
 		y=self.winfo_y()
 		self.place_forget()
 		self.place(x=x, y=y)
 		self.clear_pick()
-		self.skins[skinid].pick_skin()
+		self.skins[skin_id].pick_skin()
 
 
 class SkinButton(tk.Button):
 	def __init__(self, parent, skin_id, height, image, *args, **kwargs):
 		tk.Button.__init__(self, parent, *args, **kwargs)
 		self.parent = parent
-		self.sid = skin_id
+		self.skin_id = skin_id
 		self['activebackground'] = self['bg']
 		self.height = height
-		self.icon = Image.open(image)
-		w, h = self.icon.size
+		icon = Image.open(image)
+		w, h = icon.size
 		self.width = int(w * (self.height / h))
-		icon = self.icon.resize((self.width, self.height))
-		self.img = ImageTk.PhotoImage(icon)
+		self.img = ImageTk.PhotoImage(icon.resize((self.width, self.height)))
+		self.active_img = ImageTk.PhotoImage(icon.resize((self.width-6, self.height-6)))
 		self['image'] = self.img
 		self['command'] = self.select_skin
+
 	def place(self, x=0, y=0):
 		super().place(x=x, y=y, width=self.width, height=self.height)
 
@@ -91,17 +97,13 @@ class SkinButton(tk.Button):
 		self.parent.scroll_listener(e)
 
 	def select_skin(self):
-		self.winfo_toplevel().backend.set_active_skin(self.sid)
-		self.pick_skin()
+		self.winfo_toplevel().backend.set_active_skin(self.skin_id)
+		# self.pick_skin()
 
 	def pick_skin(self):
-		pil_image = self.icon.resize((self.width-6, self.height-6))
 		self.master.clear_pick()
-		self.master.selected_id = self.sid
-		self.img = ImageTk.PhotoImage(pil_image)
-		self['image'] = self.img
+		self.master.selected_id = self.skin_id
+		self['image'] = self.active_img
 
 	def unpick_skin(self):
-		pil_image = self.icon.resize((self.width, self.height))
-		self.img = ImageTk.PhotoImage(pil_image)
 		self['image'] = self.img

@@ -50,7 +50,7 @@ class App(Tk):
 
 	def add_build(self):
 		self.navigation_images = self.backend.get_navigation_icons()
-		self.build = Build(self, backend=self.backend, background=utils.background_color)
+		self.build = Build(self, background=utils.background_color)
 		self.width = self.build.width
 		self.height = self.build.height
 		alignstr = f'{self.width}x{self.height}+{(self.screenwidth - self.width) // 2}+{(self.screenheight - self.height) // 2}'
