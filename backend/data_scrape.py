@@ -125,7 +125,7 @@ def get_build(page, queue='5v5'):
 
 
 async def load_page(queue_name='5v5', champion_name='aatrox', lane='top'):
-	url = f'https://www.metasrc.com/lol/{queue_name}/champion/{champion_name}/{lane}'
+	url = f'https://www.metasrc.com/lol/{queue_name}/build/{champion_name}/{lane}'
 	page = ''
 	async with aiohttp.ClientSession() as session:
 		async with session.get(url) as response:
@@ -133,7 +133,7 @@ async def load_page(queue_name='5v5', champion_name='aatrox', lane='top'):
 	return lane, page
 
 
-def load_pages(queue_name='5v5', champion_name='aatrox', lanes=('top', 'jungle', 'mid', 'adc', 'support', '')):
+def load_pages(queue_name='5v5', champion_name='aatrox', lanes=['top', 'jungle', 'mid', 'adc', 'support', '']):
 	if platform.system() == 'Windows':
 		asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 	data = asyncio.run(create_page_tasks(queue_name, champion_name, lanes), debug=False)
@@ -143,13 +143,13 @@ def load_pages(queue_name='5v5', champion_name='aatrox', lanes=('top', 'jungle',
 	return result
 
 
-async def create_page_tasks(queue_name='5v5', champion_name='aatrox', lanes=('top', 'jungle', 'mid', 'adc', 'support', '')):
+async def create_page_tasks(queue_name='5v5', champion_name='aatrox', lanes=['top', 'jungle', 'mid', 'adc', 'support', '']):
 	tasks = [asyncio.create_task(load_page(queue_name, champion_name, lane)) for lane in lanes]
 	return await asyncio.gather(*tasks)
 
 
 if __name__ == '__main__':
-	result = load_pages('ahri', 'aram')
+	result = load_pages('aram', 'ahri')
 	for lane in result:
 		print(get_build(result[lane], queue='aram'))
 		print(getDefaultLane(result[lane]))
