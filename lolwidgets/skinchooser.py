@@ -41,10 +41,13 @@ class SkinChooser(tk.Frame):
 		self.skin_list = []
 		self.selected_id = skins_list['selectedSkinId']
 		self.image_length = 0
+		self.scroll = 0
 
+		skin_num = len(skins_list['availableSkins'])
 		for skin_id, skin in skins_list['availableSkins'].items():
 			self.skins[skin_id] = SkinButton(self, skin_id, self.height - 10, skin, bg='green', bd=0)
-			self.skins[skin_id].bind('<MouseWheel>', self.skins[skin_id].scroll)
+			if skin_num > 2: 
+				self.skins[skin_id].bind('<MouseWheel>', self.skins[skin_id].scroll)
 			self.skin_list.append(skin_id)
 			self.image_length += self.skins[skin_id].width
 			if self.selected_id == skin_id:
@@ -55,14 +58,11 @@ class SkinChooser(tk.Frame):
 			self.skins[self.selected_id].unpick_skin()
 		self.selected_id = -1
 
-	def scroll_listener(self, e):
-		self.scroll = max(min(0, self.scroll + e.delta), - (len(self.skins) + 1) * self.horizontal_spacing - self.image_length + self.width)
-		self.place_forget_tiles()
-		self.place_tiles()
-		# x=self.winfo_x()
-		# y=self.winfo_y()
-		# self.place_forget()
-		# self.place(x=x, y=y)
+	def scroll_listener(self, e): 
+		if len(self.skin_list) > 2:
+			self.scroll = max(min(0, self.scroll + e.delta), - (len(self.skins) + 1) * self.horizontal_spacing - self.image_length + self.width)
+			self.place_forget_tiles()
+			self.place_tiles()
 
 	def select_skin(self, skin_id):
 		if not skin_id in self.skin_list:

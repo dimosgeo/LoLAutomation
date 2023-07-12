@@ -26,7 +26,8 @@ class RuneSheet(tk.Frame):
 		super().place_forget()
 		self.main_categories.place_forget()
 		self.secondary_categories.place_forget()
-		self.pages.place_forget()
+		for page in self.pages:
+		page.place_forget()
 		self.small_runes.place_forget()
 
 	def clear_pages(self):
