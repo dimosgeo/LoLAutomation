@@ -6,8 +6,8 @@ import io
 
 
 class SVG:
-    def __init__(self, filepath):
-        self.tree = ET.parse(filepath).getroot()
+    def __init__(self, tree):
+        self.tree = ET.fromstring(tree)
         self.viewbox = [0, 0, 0, 0]
         self.paths = []
         self.make_paths()
@@ -209,6 +209,10 @@ class SVG:
         elif 'width' in self.tree.attrib and 'height' in self.tree.attrib:
             self.viewbox[2] = float(self.tree.attrib['width'])
             self.viewbox[3] = float(self.tree.attrib['height'])
+    
+    def set(self, **args):
+        for path in self.paths:
+            path.set(**args)
 
     @property
     def buffer(self, transparent=True, format='png'):

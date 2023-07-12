@@ -4,6 +4,7 @@ import wmi
 import socket
 import io
 import argparse
+from utils.svg import SVG 
 
 
 requests.packages.urllib3.disable_warnings()
@@ -108,8 +109,8 @@ def getRunes(url):
 	runes = {}
 	for s in r:
 		slots = [x['perks'] for x in s['slots']]
-		runes[s['id']] = {'slots': slots, 'iconPath': s['iconPath'], 'color':rune_colors[s['id']]}
-		# runes[s['id']] = {'slots': slots, 'iconPath': s['assetMap']['svg_icon'], 'color':rune_colors[s['id']]}
+		# runes[s['id']] = {'slots': slots, 'iconPath': s['iconPath'], 'color':rune_colors[s['id']]}
+		runes[s['id']] = {'slots': slots, 'iconPath': s['assetMap']['svg_icon'], 'color':rune_colors[s['id']]}
 	return runes
 
 
@@ -266,13 +267,20 @@ def getChampionInfo(url, cid):
 def getFullRunePageImages(url):
 	runes = getRunes(url)
 	perks = getPerks(url)
+	# print(runes)
 
 	allRunes = [[]]
 	stats = [[getImageFromUrl(url, perks[p]['iconPath']) for p in perk] for perk in runes[8000]['slots'][-3:]]
 	runesOrder = [8000, 8100, 8200, 8400, 8300]
-	for rune in runesOrder:
+	colors = ['#c8aa6e', '#dc4747', '#6c75f5', '#a4d08d', '#48b4be']
+
+	for rune, color in zip(runesOrder, colors):
 		page = runes[rune]['slots']
-		allRunes[0].append(getImageFromUrl(url, runes[rune]['iconPath']))
+		# print(SVG(requests.get(url+runes[rune]['iconPath'], verify=False).content))
+		icon = SVG(requests.get(url+runes[rune]['iconPath'], verify=False).content)
+		icon.set(facecolor=color)
+		allRunes[0].append(icon.buffer)
+		# allRunes[0].append(getImageFromUrl(url, runes[rune]['iconPath']))
 		allRunes.append([[getImageFromUrl(url, perks[p]['iconPath']) for p in perk] for perk in page[:-3]])
 	allRunes.append(stats)
 	return allRunes
@@ -296,7 +304,7 @@ def getSkins(url):
 
 def main():
 	url = get_client_url()
-	setSkin(url,222029)
+	getFullRunePageImages(url)
 	# getRunes(url)
 	# print(getItems(url))
 
