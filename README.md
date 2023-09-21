@@ -39,9 +39,10 @@ In this section, we provide some future goals about this project.
 * User can choose between pick rate and win rate
 * Build and use our database for builds, skill order, rune pages.
 * Choose between differend 3rd party platform (not only METAsrc) for taking data (including our webserver).
+* Set chromas
 
 ### Bugs
-* There is a known bug about skin selection because of timing issues
+* There is a known bug about skin selection on champions with chromas
 * Remove some warmings
 
 
