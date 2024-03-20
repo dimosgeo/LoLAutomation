@@ -93,7 +93,6 @@ class App(Tk):
 		self.status_label.place(x=self.width / 2 - self.status_label_width / 2, y=self.height / 2 - self.status_label_height / 2, width=self.status_label_width, height=self.status_label_height)
 
 	def events_handler(self, event):
-		print(event)
 		if event.widget == self and (self.winfo_width() != self.width or self.winfo_height() != self.height):
 			if self.build is not None and self.build.winfo_ismapped():
 				self.build.place(x=0, y=self.padding.TOP)
