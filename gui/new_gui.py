@@ -21,7 +21,7 @@ class App(Tk):
 
 		self.icon = ImageTk.PhotoImage(Image.open('images/icon.png'))
 		self.iconbitmap(default='images/icon.png')
-		self.backend = Backend(development_mode)
+		self.backend = Backend(self.dev_mode)
 		self.build = None
 		self.scrollbar = None
 		self.navigation_images = None
@@ -43,7 +43,7 @@ class App(Tk):
 		self.status_label_height = self.status_font.metrics('linespace')
 		self.ping = PingLabel(self, font_size=10, background=utils.background_color, foreground='#3BA55C')
 
-		self.after(1000, self.get_ping)
+		# self.after(1000, self.get_ping)
 		self.lolListener = Thread(target=self.lol_listener, daemon=True)
 		self.lolListener.start()
 		print(f'Start time: {time.time() - self.start}')
@@ -75,7 +75,7 @@ class App(Tk):
 				self.add_build()
 				self.show_message_label()
 				if self.dev_mode:
-					self.backend.champion_id = 53#16
+					self.backend.champion_id = 32#16
 					self.load_data()
 			if status == 'CHAMPION_PICKED':
 				self.status_label.place_forget()
@@ -93,6 +93,7 @@ class App(Tk):
 		self.status_label.place(x=self.width / 2 - self.status_label_width / 2, y=self.height / 2 - self.status_label_height / 2, width=self.status_label_width, height=self.status_label_height)
 
 	def events_handler(self, event):
+		print(event)
 		if event.widget == self and (self.winfo_width() != self.width or self.winfo_height() != self.height):
 			if self.build is not None and self.build.winfo_ismapped():
 				self.build.place(x=0, y=self.padding.TOP)

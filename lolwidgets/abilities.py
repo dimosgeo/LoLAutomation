@@ -17,15 +17,21 @@ class AbilitiesTable(tk.Frame):
         self.table: list = [[tk.Label(self, font=Font(family="Helvetica", size=12, weight="bold"), bg=utils.background_color, fg='white', bd=0) for _ in range(19)] for _ in range(5)]
         self.old_order = []
         self.descriptionLabel = DescriptionLabel(self.winfo_toplevel(), bg='black', foreground='white', anchor='nw')
+        self.icons = []
 
         for index, cell in enumerate(self.table[0][1:], start=1):
             cell['text'] = index
             cell['bg'] = utils.palette[0]
 
     def set_abilities(self, ability_list) -> None:
+        self.icons = []
         for cell in range(5):
             self.table[cell][0].destroy()
-            self.table[cell][0] = AbilityIcon(self, icon=ability_list[cell]['icon'], size=int(self.cell_size), bg=utils.background_color, bd=0)
+            self.table[cell][0] = tk.Label(self, bd=0)
+            self.icons.append(ImageTk.PhotoImage(Image.open(ability_list[cell]['icon']).resize((self.cell_size, self.cell_size))))
+            self.table[cell][0]['image'] = self.icons[-1]
+            self.table[cell][0]['bg'] = utils.background_color
+            self.table[cell][0]['bd'] = 0
             
             if ability_list[cell]['name']:
                 self.table[cell][0].bind('<Enter>', self.create_lambda(ability_list[cell]['name']))
@@ -57,24 +63,3 @@ class AbilitiesTable(tk.Frame):
                 x += self.cell_size + self.border_size
         
             y += self.cell_size + self.border_size
-
-
-# class AbilityCell(tk.Frame):
-#     def __init__(self, parent, size: float, *args, **kwargs) -> None:
-#         tk.Frame.__init__(self, parent, *args, **kwargs)
-#         self.content = tk.Label(self, font=Font(family="Helvetica", size=12), bg=self['bg'])
-#         self.size = size
-
-#     def place(self, x=0, y=0):
-#         super().place(x=x, y=y, width=self.size, height=self.size)
-#         if self.content is not None:
-#             self.content.place(x=0, y=0, width=self.size, height=self.size)
-
-
-class AbilityIcon(tk.Button):
-    def __init__(self, parent: tk.Widget, icon: bytes, size: int, *args, **kwargs) -> None:
-        tk.Button.__init__(self, parent, *args, **kwargs)
-        self.icon = ImageTk.PhotoImage(Image.open(icon).resize((size, size)))
-        self.size = size
-        self['image'] = self.icon
-        self['activebackground'] = self['bg']

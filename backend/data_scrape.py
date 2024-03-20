@@ -149,7 +149,7 @@ async def create_page_tasks(queue_name='5v5', champion_name='aatrox', lanes=['to
 
 
 if __name__ == '__main__':
-	result = load_pages('aram', 'ahri')
+	result = load_pages('5v5', 'kennen')
 	for lane in result:
-		print(get_build(result[lane], queue='aram'))
+		print(get_build(result[lane], queue='5v5'))
 		print(getDefaultLane(result[lane]))

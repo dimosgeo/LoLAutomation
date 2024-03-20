@@ -37,6 +37,8 @@ class SkinChooser(tk.Frame):
 
 	def set_skins(self, skins_list):
 		self.place_forget_tiles()
+		if not len(skins_list):
+			return
 		self.skins = dict()
 		self.skin_list = []
 		self.selected_id = skins_list['selectedSkinId']
@@ -73,8 +75,8 @@ class SkinChooser(tk.Frame):
 			self.scroll = max(min(0, delta), - (len(self.skins) + 1) * self.horizontal_spacing - self.image_length + self.width)
 		else:
 			self.scroll = 0
-		x=self.winfo_x()
-		y=self.winfo_y()
+		x = self.winfo_x()
+		y = self.winfo_y()
 		self.place_forget()
 		self.place(x=x, y=y)
 		self.clear_pick()
@@ -104,7 +106,6 @@ class SkinButton(tk.Button):
 
 	def select_skin(self):
 		self.winfo_toplevel().backend.set_active_skin(self.skin_id)
-		# self.pick_skin()
 
 	def pick_skin(self):
 		self.master.clear_pick()

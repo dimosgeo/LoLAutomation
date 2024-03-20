@@ -155,4 +155,6 @@ class Backend:
         lolib.setSkin(self.url, skin_id)
 
     def get_skins(self):
+        if self.dev_mode:
+            return []
         return lolib.getSkins(self.url)
