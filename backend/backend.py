@@ -57,7 +57,7 @@ class Backend:
         def BuildByLane(page, queueName):
             build = ds.get_build(page, queue=queueName)
             if not build['exists']:
-                return False, {}
+                return False, {}, {}
             championLane = dict()
             championLane['spells'] = [lolib.getImageFromUrl(self.url, self.allSpells[build['spells'][i]]['iconPath']) for i in range(2)]
             championLane['ability_order'] = build['abilities_order']

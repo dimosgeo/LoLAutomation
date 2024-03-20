@@ -115,12 +115,15 @@ def get_build(page, queue='5v5'):
 	if not checkIfExists(tree):
 		data_dict["exists"] = False
 		return data_dict
-	get_lane(tree, data_dict, queue)
-	get_spells(tree, data_dict)
-	get_runes(tree, data_dict)
-	get_abilities(tree, data_dict)
-	get_items(tree, data_dict)
-	get_rates(tree, data_dict, queue)
+	try:
+		get_lane(tree, data_dict, queue)
+		get_spells(tree, data_dict)
+		get_runes(tree, data_dict)
+		get_abilities(tree, data_dict)
+		get_items(tree, data_dict)
+		get_rates(tree, data_dict, queue)
+	except:
+		data_dict["exists"] = False
 	return data_dict
 
 
