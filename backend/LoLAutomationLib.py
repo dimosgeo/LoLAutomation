@@ -227,31 +227,16 @@ def getSpellsIds(url):
 
 
 def getCurrentchampion(url):
-	path = "/lol-champ-select/v1/pin-drop-notification"
-	r = requests.get(url + path, verify=False).json()
+	path = url+"/lol-champ-select/v1/session/"
+	r = requests.get(path, verify=False).json()
 
-	me = -1
-	for player in r['pinDropSummoners']:
-		if player['isLocalSummoner']:
-			me = player['slotId']
-			break
+	cell_id = r.get('localPlayerCellId',-1)
+	if cell_id != -1:
+		for player in r['actions'][0]:
+			if player['actorCellId'] == cell_id:
+				return player['championId'],player['completed'] 
 
-	if me == -1:
-		return -1
-
-	path = f"/lol-champ-select/v1/summoners/{me}"
-	r = requests.get(url + path, verify=False).json()
-
-	path = url+"/lol-champ-select/v1/skin-selector-info"
-	selectedChampion = requests.get(path, verify=False).json()['selectedChampionId']
-
-	if selectedChampion!=r['championId']:
-		return -1
-
-	if r['areSummonerActionsComplete'] and r['championId']>0:
-		return r['championId']
-
-	return -1 
+	return -1, False
 
 
 def getChampionInfo(url, cid):
