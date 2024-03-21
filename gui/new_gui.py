@@ -1,9 +1,9 @@
 import time
 from utils import utils
-from tkinter import Tk, Label, ttk
+from tkinter import Tk, Label
 from tkinter.font import Font
 from backend import Backend
-from lolwidgets import Spacing, Padding, Build, PingLabel, MyScrollBar, WindowNavigation
+from lolwidgets import Spacing, Padding, Build, PingLabel, VerticalScrollBar
 from threading import Thread
 from PIL import Image, ImageTk
 
@@ -55,7 +55,7 @@ class App(Tk):
 		self.height = self.build.height
 		alignstr = f'{self.width}x{self.height}+{(self.screenwidth - self.width) // 2}+{(self.screenheight - self.height) // 2}'
 		self.geometry(alignstr)
-		self.scrollbar = MyScrollBar(self, width=16, background=utils.background_color, child_w=self.build)
+		self.scrollbar = VerticalScrollBar(self, width=16, background=utils.background_color, child_w=self.build)
 
 	def get_ping(self):
 		self.ping['text'] = self.backend.ping()
@@ -95,7 +95,7 @@ class App(Tk):
 	def events_handler(self, event):
 		if event.widget == self and (self.winfo_width() != self.width or self.winfo_height() != self.height):
 			if self.build is not None and self.build.winfo_ismapped():
-				self.build.place(x=0, y=self.padding.TOP)
+				self.build.place(x=0, y=self.padding.top)
 			self.ping.place(x=self.winfo_width() - self.ping.width - self.padding.right, y=self.winfo_height() - self.ping.height - self.padding.right)
 			if self.scrollbar is not None and self.build.winfo_ismapped():
 				self.scrollbar.place()

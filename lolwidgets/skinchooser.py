@@ -2,6 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from utils import utils
 
+
 class SkinChooser(tk.Frame):
 	def __init__(self, parent, width, height, horizontal_space=5, *args, **kwargs) -> None:
 		tk.Frame.__init__(self, parent, *args, **kwargs)
@@ -35,7 +36,7 @@ class SkinChooser(tk.Frame):
 		for skin in self.skin_list:
 			self.skins[skin].place_forget()
 
-	def set_skins(self, skins_list):
+	def set_skins(self, skins_list) -> None:
 		self.place_forget_tiles()
 		if not len(skins_list):
 			return
@@ -55,23 +56,23 @@ class SkinChooser(tk.Frame):
 			if self.selected_id == skin_id:
 				self.skins[skin_id].pick_skin()
 
-	def clear_pick(self):
+	def clear_pick(self) -> None:
 		if self.selected_id != -1:
 			self.skins[self.selected_id].unpick_skin()
 		self.selected_id = -1
 
-	def scroll_listener(self, e): 
+	def scroll_listener(self, e) -> None:
 		if len(self.skin_list) > 2:
 			self.scroll = max(min(0, self.scroll + e.delta), - (len(self.skins) + 1) * self.horizontal_spacing - self.image_length + self.width)
 			self.place_forget_tiles()
 			self.place_tiles()
 
 	def select_skin(self, skin_id):
-		if not skin_id in self.skin_list:
+		if skin_id not in self.skin_list:
 			return
 		skin_index = self.skin_list.index(skin_id)
 		if skin_index > 2:
-			delta = -(skin_index / len(self.skin_list)) * self.image_length - (skin_index * self.horizontal_spacing) + self.horizontal_spacing 
+			delta = -(skin_index / len(self.skin_list)) * self.image_length - (skin_index * self.horizontal_spacing) + self.horizontal_spacing
 			self.scroll = max(min(0, delta), - (len(self.skins) + 1) * self.horizontal_spacing - self.image_length + self.width)
 		else:
 			self.scroll = 0
@@ -89,7 +90,7 @@ class SkinButton(tk.Button):
 		self.parent = parent
 		self.skin_id = skin_id
 		self['activebackground'] = self['bg']
-		self.height = height
+		self.height = int(height)
 		icon = Image.open(image)
 		w, h = icon.size
 		self.width = int(w * (self.height / h))

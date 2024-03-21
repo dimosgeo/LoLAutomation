@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter.font import Font
+from typing import Dict, Any
 from utils import utils
 from PIL import ImageTk, Image
 from lolwidgets.runepage import RuneSheet
@@ -30,7 +31,7 @@ class Build(tk.Frame):
 		self.skins = SkinChooser(self, width=self.abilities.width, height=self.height - self.champion_frame.height - self.abilities.height - self.starting_items.height - self.full_build.height - 5 * self.spacing.vertical)
 		self.previous_selected = ''
 	
-	def set_champion(self, champion) -> None:
+	def set_champion(self, champion: Dict[str, Any]) -> None:
 		self.champion = champion
 		self.data.set_lanes(champion['build'].keys())
 		self.champion_frame.set_champion(champion['name'], champion['image'])
@@ -57,7 +58,7 @@ class Build(tk.Frame):
 		y = 0
 		self.champion_frame.place(x=0, y=0)
 		y += self.champion_frame.height
-		self.data.place(x=self.spacing.horizontal, y=y)
+		self.data.place(x=int(self.spacing.horizontal), y=y)
 		y += self.data.height
 		self.rune_sheet.place(x=self.spacing.horizontal, y=y)
 		x = self.spacing.horizontal * 2 + self.rune_sheet.width
@@ -79,8 +80,8 @@ class Build(tk.Frame):
 		self.full_build.place_forget()
 		self.data.place_forget()
 
-	def select_skin(self, skinid):
-		self.skins.select_skin(skinid)
+	def select_skin(self, skin_id: int):
+		self.skins.select_skin(skin_id)
 
 
 class ControlFrame(tk.Frame):
@@ -103,12 +104,12 @@ class ControlFrame(tk.Frame):
 	def select_lane(self, lane):
 		self.laneFrame.select_lane(lane)
 
-	def set_values(self, win_rate, ban_rate, play_rate):
+	def set_values(self, win_rate: float, ban_rate: float, play_rate: float) -> None:
 		self.win_rate_value['text'] = f'{win_rate:.2f}%'
 		self.ban_rate_value['text'] = f'{ban_rate:.2f}%'
 		self.pick_rate_value['text'] = f'{play_rate:.2f}%'
 
-	def set_lanes(self, lane_list):
+	def set_lanes(self, lane_list) -> None:
 		self.laneFrame.set_active_buttons(lane_list)
 
 	def place(self, x=0, y=0) -> None:
@@ -154,7 +155,7 @@ class LaneFrame(tk.Frame):
 		self.active_buttons = []
 		self.previous_selected = -1
 
-	def select_lane(self, lane):
+	def select_lane(self, lane: int) -> None:
 		if self.previous_selected != -1:
 			self.button_list[self.previous_selected].set_active(False)
 			self.button_list[self.previous_selected]['bg'] = self['bg']
@@ -162,12 +163,12 @@ class LaneFrame(tk.Frame):
 		self.button_list[utils.lane_indexes[lane]]['bg'] = utils.widget_color
 		self.previous_selected = utils.lane_indexes[lane]
 
-	def toggle_lane(self, lane):
+	def toggle_lane(self, lane: int) -> None:
 		if self.previous_selected == utils.lane_indexes[lane]:
 			return
 		self.lane_func(lane)
 
-	def set_active_buttons(self, lanes):
+	def set_active_buttons(self, lanes) -> None:
 		self.active_buttons = []
 		for lane in lanes:
 			self.active_buttons.append(utils.lane_indexes[lane])

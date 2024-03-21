@@ -1,8 +1,10 @@
+import io
 import lxml.etree as ET
+from matplotlib import use as mplot_use
+mplot_use('svg')
 import matplotlib.pyplot as plt
 from matplotlib.path import Path
 from matplotlib.patches import PathPatch, Polygon, Ellipse
-import io
 
 
 class SVG:
@@ -215,7 +217,7 @@ class SVG:
             path.set(**args)
 
     @property
-    def buffer(self, transparent=True, format='png'):
+    def buffer(self, transparent=True, image_format='png'):
         fig, ax = plt.subplots()
         for path in self.paths:
             ax.add_patch(path)
@@ -225,6 +227,6 @@ class SVG:
         plt.ylim([-self.viewbox[3], self.viewbox[1]])
         plt.axis('off')
         img_buf = io.BytesIO()
-        plt.savefig(img_buf, bbox_inches='tight', transparent=transparent, format=format)
+        plt.savefig(img_buf, bbox_inches='tight', transparent=transparent, format=image_format)
 
         return img_buf

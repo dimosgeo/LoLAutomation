@@ -20,7 +20,7 @@ class ChampionFrame(Frame):
 		self.champion_image = Button(self, background=self['bg'], activebackground=self['bg'], bd=0)
 		self.summonerSpellsFrame = SummonerSpellFrame(self, backend, size=self.spell_size, background=self['bg'])
 
-	def set_champion(self, name, image):
+	def set_champion(self, name: str, image) -> None:
 		self.champion_icon = ImageTk.PhotoImage(Image.open(image).resize((int(self.champion_size), int(self.champion_size))))
 		self.champion_image['image'] = self.champion_icon
 		self.champion_name['text'] = name
@@ -28,7 +28,7 @@ class ChampionFrame(Frame):
 	def set_spells(self, spells):
 		self.summonerSpellsFrame.set_spells(spells)
 
-	def place(self, x=0, y=0):
+	def place(self, x=0, y=0) -> None:
 		super().place(x=x, y=y, width=self.width, height=self.height)
 		self.champion_image.place(x=self.spacing.horizontal + 5, y=5, width=self.champion_size, height=self.champion_size)
 		self.champion_name.place(x=self.height + self.spacing.horizontal * 2, y=5, height=self.height, width=340)
@@ -42,7 +42,7 @@ class SummonerSpellFrame(Frame):
 		self.height = size
 		self.backend = backend
 		self.images = []
-		self.spells = [Button(self, bd=0, bg=self['bg'], activebackground=self['bg']) for i in range(2)]
+		self.spells = [Button(self, bd=0, bg=self['bg'], activebackground=self['bg']) for _ in range(2)]
 		self.swap_button_size = 20
 		self.swap_image = ImageTk.PhotoImage(Image.open('images/swap_icon.png').resize((self.swap_button_size, self.swap_button_size)))
 		self.label_font = Font(family="Helvetica", size=12, weight="bold")

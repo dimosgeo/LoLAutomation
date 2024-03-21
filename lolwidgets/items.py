@@ -45,7 +45,7 @@ class ItemBuildFrame(tk.Frame):
 		self.place_children()
 
 	def create_lambda(self, description):
-		return lambda *args: self.descriptionLabel.show_description(description, args[0])
+		return lambda *args: self.descriptionLabel.show_description(description, args[0].widget)
 
 	def place(self, x=0, y=0):
 		super().place(x=x, y=y, height=self.height, width=self.width)

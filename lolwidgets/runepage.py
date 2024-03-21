@@ -1,6 +1,5 @@
 from utils import utils
 import tkinter as tk
-from tkinter import ttk
 from PIL import Image, ImageTk
 
 
@@ -10,17 +9,15 @@ class RuneSheet(tk.Frame):
 		self.categories_space = categories_space
 		self.previous_active = [-1, -1]
 		self['bg'] = utils.widget_color
-		self.bg_label = tk.Label(self, bg=utils.widget_color)
+		self.pages = [RuneFrame(self, page, keystone_size=keystone_size, rune_size=rune_size, horizontal_space=horizontal_space, is_primary=True, vertical_space=vertical_space, background=utils.widget_color) for page in rune_list[1:-1]]
 		self.main_categories = RuneHeaderFrame(self, rune_list=rune_list[0], size=categories_size, horizontal_space=horizontal_space, background=utils.widget_color)
 		self.secondary_categories = RuneHeaderFrame(self, rune_list=rune_list[0], size=categories_size, horizontal_space=horizontal_space, background=utils.widget_color)
-		self.pages = [RuneFrame(self, page, keystone_size=keystone_size, rune_size=rune_size, horizontal_space=horizontal_space, is_primary=True, vertical_space=vertical_space, background=utils.widget_color) for page in rune_list[1:-1]]
 		self.small_runes = StatRunes(self, rune_list=rune_list[-1], rune_size=small_rune_size, horizontal_space=15, background=utils.widget_color)
 		self.width = self.main_categories.width + self.secondary_categories.width - self.secondary_categories.size + self.categories_space * 3
 		self.height = self.secondary_categories.size + self.pages[0].height - keystone_size + self.small_runes.height + categories_space * 1
 
 	def place(self, x=0, y=0):
 		super().place(x=x, y=y, width=self.width, height=self.height)
-		# self.bg_label.place(x=0, y=0, width=self.width, height=self.height)
 
 	def place_forget(self):
 		super().place_forget()

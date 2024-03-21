@@ -1,4 +1,5 @@
 import tkinter as tk
+from typing import Callable, List
 from tkinter.font import Font
 from PIL import ImageTk, Image
 from utils import utils
@@ -6,7 +7,7 @@ from lolwidgets.descriptionLabel import DescriptionLabel
 
 
 class AbilitiesTable(tk.Frame):
-    def __init__(self, parent, cell_size: int, border_size: int, *args, **kwargs):
+    def __init__(self, parent, cell_size: int, border_size: int, *args, **kwargs) -> None:
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.ability_buttons = ['P', 'Q', 'W', 'E', 'R']
         self['bg'] = utils.widget_color
@@ -23,7 +24,7 @@ class AbilitiesTable(tk.Frame):
             cell['text'] = index
             cell['bg'] = utils.palette[0]
 
-    def set_abilities(self, ability_list) -> None:
+    def set_abilities(self, ability_list: List) -> None:
         self.icons = []
         for cell in range(5):
             self.table[cell][0].destroy()
@@ -37,8 +38,8 @@ class AbilitiesTable(tk.Frame):
                 self.table[cell][0].bind('<Enter>', self.create_lambda(ability_list[cell]['name']))
                 self.table[cell][0].bind('<Leave>', lambda *args: self.descriptionLabel.hide_description())
 
-    def create_lambda(self, name):
-        return lambda *args: self.descriptionLabel.show_description(name, args[0])
+    def create_lambda(self, name: str) -> Callable[[str], None]:
+        return lambda *args: self.descriptionLabel.show_description(name, args[0].widget)
 
     def set_ability_order(self, ability_order_list) -> None:
         for lvl, ability in enumerate(self.old_order, start=1):
@@ -51,7 +52,7 @@ class AbilitiesTable(tk.Frame):
 
         self.old_order = ability_order_list
 
-    def place(self, x=0, y=0):
+    def place(self, x=0, y=0) -> None:
         super().place(x=x, y=y, height=self.height, width=self.width)
         y = self.border_size
 

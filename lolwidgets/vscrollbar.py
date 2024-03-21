@@ -2,7 +2,7 @@ from tkinter import Frame, Button
 from lolwidgets.utils import Position
 
 
-class MyScrollBar(Frame):
+class VerticalScrollBar(Frame):
     def __init__(self, master, child_w, width: float = 16, pivotcolor: str = '#808080', *args, **kargs) -> None:
         Frame.__init__(self, master, *args, **kargs)
         self.width = width
