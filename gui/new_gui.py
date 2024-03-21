@@ -83,6 +83,7 @@ class App(Tk):
 			if status == 'CHAMPION_LOCKED':
 				self.status_label.place_forget()
 				self.show_data()
+				self.show_skins()
 			if status == 'GAME_CLOSED':
 				self.status_label['text'] = 'Waiting for client to open.'
 				self.build.place_forget()
@@ -110,9 +111,11 @@ class App(Tk):
 		self.build.set_champion(self.backend.get_build())
 
 	def show_data(self) -> None:
-		self.build.set_skins(self.backend.get_skins())
 		self.build.place(x=0, y=self.padding.top)
 		self.scrollbar.place()
+
+	def show_skins(self) -> None:
+		self.build.set_skins(self.backend.get_skins())
 
 	def on_closing(self):
 		self.backend.close()

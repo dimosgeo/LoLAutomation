@@ -59,7 +59,7 @@ class SkinChooser(tk.Frame):
 	def clear_pick(self) -> None:
 		if self.selected_id != -1:
 			self.skins[self.selected_id].unpick_skin()
-		self.selected_id = -1
+			self.selected_id = -1
 
 	def scroll_listener(self, e) -> None:
 		if len(self.skin_list) > 2:
@@ -97,7 +97,7 @@ class SkinButton(tk.Button):
 		self.img = ImageTk.PhotoImage(icon.resize((self.width, self.height)))
 		self.active_img = ImageTk.PhotoImage(icon.resize((self.width-6, self.height-6)))
 		self['image'] = self.img
-		self['command'] = self.select_skin
+		self['command'] = self.pick_skin
 
 	def place(self, x=0, y=0):
 		super().place(x=x, y=y, width=self.width, height=self.height)
@@ -112,6 +112,7 @@ class SkinButton(tk.Button):
 		self.master.clear_pick()
 		self.master.selected_id = self.skin_id
 		self['image'] = self.active_img
+		self.select_skin()
 
 	def unpick_skin(self):
 		self['image'] = self.img

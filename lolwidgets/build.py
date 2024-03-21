@@ -40,7 +40,7 @@ class Build(tk.Frame):
 		# self.skins.set_skins(self.backend.get_skins())
 
 	def set_skins(self, skins) -> None:
-		self.set_skins(skins)
+		self.skins.set_skins(skins)
 
 	def select_lane(self, lane: str) -> None:
 		if self.champion is None:
