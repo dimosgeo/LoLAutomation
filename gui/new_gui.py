@@ -110,6 +110,7 @@ class App(Tk):
 		self.build.set_champion(self.backend.get_build())
 
 	def show_data(self) -> None:
+		self.build.set_skins(self.backend.get_skins())
 		self.build.place(x=0, y=self.padding.top)
 		self.scrollbar.place()
 

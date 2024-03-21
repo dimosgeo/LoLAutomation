@@ -37,8 +37,11 @@ class Build(tk.Frame):
 		self.champion_frame.set_champion(champion['name'], champion['image'])
 		self.abilities.set_abilities(champion['abilities'])
 		self.select_lane(champion['default_lane'])
-		self.skins.set_skins(self.backend.get_skins())
-	
+		# self.skins.set_skins(self.backend.get_skins())
+
+	def set_skins(self, skins) -> None:
+		self.set_skins(skins)
+
 	def select_lane(self, lane: str) -> None:
 		if self.champion is None:
 			return
