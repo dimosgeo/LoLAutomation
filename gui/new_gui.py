@@ -75,11 +75,14 @@ class App(Tk):
 				self.add_build()
 				self.show_message_label()
 				if self.dev_mode:
-					self.backend.champion_id = self.dev_mode#16
+					self.backend.champion_id = self.dev_mode
 					self.load_data()
+					self.show_data()
 			if status == 'CHAMPION_PICKED':
-				self.status_label.place_forget()
 				self.load_data()
+			if status == 'CHAMPION_LOCKED':
+				self.status_label.place_forget()
+				self.show_data()
 			if status == 'GAME_CLOSED':
 				self.status_label['text'] = 'Waiting for client to open.'
 				self.build.place_forget()
@@ -105,6 +108,8 @@ class App(Tk):
 
 	def load_data(self):
 		self.build.set_champion(self.backend.get_build())
+
+	def show_data(self) -> None:
 		self.build.place(x=0, y=self.padding.top)
 		self.scrollbar.place()
 
