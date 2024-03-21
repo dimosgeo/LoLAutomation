@@ -1,9 +1,9 @@
 import time
 from utils import utils
 from tkinter import Tk, Label
-from tkinter.font import Font
 from backend import Backend
-from lolwidgets import Spacing, Padding, Build, PingLabel, VerticalScrollBar
+from utils import Spacing, Padding
+from lolwidgets import Build, PingLabel, VerticalScrollBar
 from threading import Thread
 from PIL import Image, ImageTk
 
@@ -15,10 +15,10 @@ class App(Tk):
 		self.start = time.time()
 		self.title('LOL Assistant')
 		self.protocol("WM_DELETE_WINDOW", self.on_closing)
-		self.configure(bg=utils.background_color)
+		self.configure(bg=utils.colors['background'])
 		self.bind("<Configure>", self.events_handler)
 		self.resizable(width=False, height=False)
-
+		utils.init_fonts()
 		self.icon = ImageTk.PhotoImage(Image.open('images/icon.png'))
 		self.iconbitmap(default='images/icon.png')
 		self.backend = Backend(self.dev_mode)
@@ -37,11 +37,8 @@ class App(Tk):
 
 		self.geometry(alignstr)
 		self.wm_iconphoto(False, self.icon)
-		self.status_font = Font(family='Helvetica', size=14)
-		self.status_label = Label(self, text='Waiting for client to open.', font=self.status_font, bg=self['bg'], foreground='white')
-		self.status_label_width = self.status_font.measure(self.status_label['text'])
-		self.status_label_height = self.status_font.metrics('linespace')
-		self.ping = PingLabel(self, font_size=10, background=utils.background_color, foreground='#3BA55C')
+		self.status_label = Label(self, text='Waiting for client to open', font=utils.fonts['normal'], bg=self['bg'], foreground='white')
+		self.ping = PingLabel(self, font_size=10, background=utils.colors['transparent'], foreground='#3BA55C')
 
 		# self.after(1000, self.get_ping)
 		self.lolListener = Thread(target=self.lol_listener, daemon=True)
@@ -50,12 +47,12 @@ class App(Tk):
 
 	def add_build(self):
 		self.navigation_images = self.backend.get_navigation_icons()
-		self.build = Build(self, background=utils.background_color)
+		self.build = Build(self, background=utils.colors['background'], rune_icons=self.backend.get_runes(), lane_navigation_icons=self.backend.navigation_icons['lane_navigation'], client_setup_function=self.backend.set_everything, set_skin_function=self.backend.set_active_skin, swap_spell_function=self.backend.swap_spells)
 		self.width = self.build.width
 		self.height = self.build.height
 		alignstr = f'{self.width}x{self.height}+{(self.screenwidth - self.width) // 2}+{(self.screenheight - self.height) // 2}'
 		self.geometry(alignstr)
-		self.scrollbar = VerticalScrollBar(self, width=16, background=utils.background_color, child_w=self.build)
+		self.scrollbar = VerticalScrollBar(self, width=16, background=utils.colors['background'], child_w=self.build)
 
 	def get_ping(self):
 		self.ping['text'] = self.backend.ping()
@@ -71,7 +68,7 @@ class App(Tk):
 			if status == 'PROCESS_CLOSED':
 				break
 			if status == 'GAME_OPENED':
-				self.status_label['text'] = 'Waiting for champion pick.'
+				self.status_label['text'] = 'Waiting for champion pick'
 				self.add_build()
 				self.show_message_label()
 				if self.dev_mode:
@@ -85,7 +82,7 @@ class App(Tk):
 				self.show_data()
 				self.show_skins()
 			if status == 'GAME_CLOSED':
-				self.status_label['text'] = 'Waiting for client to open.'
+				self.status_label['text'] = 'Waiting for client to open'
 				self.build.place_forget()
 				self.scrollbar.place_forget()
 				self.show_message_label()
@@ -93,8 +90,7 @@ class App(Tk):
 				self.build.select_skin(message.message[0])
 
 	def show_message_label(self):
-		self.status_label_width = self.status_font.measure(self.status_label['text'])
-		self.status_label.place(x=self.width / 2 - self.status_label_width / 2, y=self.height / 2 - self.status_label_height / 2, width=self.status_label_width, height=self.status_label_height)
+		self.status_label.place(x=0, y=0, width=self.width, height=self.height)
 
 	def events_handler(self, event):
 		if event.widget == self and (self.winfo_width() != self.width or self.winfo_height() != self.height):

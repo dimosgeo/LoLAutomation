@@ -1,11 +1,11 @@
 import tkinter as tk
-from tkinter.font import Font
+import utils
 
 
 class PingLabel(tk.Label):
     def __init__(self, parent, font_size: int = 10, *args, **kwargs):
         tk.Label.__init__(self, parent, *args, **kwargs)
-        self.font = Font(family='Helvetica', size=font_size, weight='bold')
+        self.font = utils.fonts['small_bold']
         self['font'] = self.font
         self['text'] = ''
         self.height = self.font.metrics('linespace')

@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter.font import Font
+import utils
 from lolwidgets.descriptionLabel import DescriptionLabel
 from PIL import Image, ImageTk
 
@@ -9,12 +9,12 @@ class ItemBuildFrame(tk.Frame):
 		tk.Frame.__init__(self, parent, *args, **kwargs)
 		self.width = width
 		self.height = height
-		self.font = Font(family='Helvetica', size=16, weight='bold')
+		self.font = utils.fonts['normal_bold']
 		if not title_width:
 			self.title_width = self.font.measure(title) + 5
 		else:
 			self.title_width = title_width
-		self.title = tk.Label(self, text=title, font=self.font, width=self.title_width, anchor='w', bg=self['bg'], fg='white')
+		self.title = tk.Label(self, text=title, font=self.font, anchor='w', bg=self['bg'], fg='white')
 		self.horizontal_space = horizontal_space
 		self.item_list = []
 		self.image_list = []
@@ -72,12 +72,12 @@ class ItemBuildFrame(tk.Frame):
 class NumberLabel(tk.Label):
 	def __init__(self, parent, text=1, *args, **kwargs):
 		tk.Label.__init__(self, parent, *args, **kwargs)
-		self.font = Font(family='Helvetica', size=12, weight='bold')
+		self.font = utils.fonts['small_bold']
 		self['font'] = self.font
 		self['foreground'] = 'white'
 		self['text'] = text
 
-	def place(self, x=0, y=0):
+	def place(self, x: int = 0, y: int = 0):
 		super().place(x=x, y=y, height=self.font.metrics('linespace'), width=self.font.metrics('linespace'))
 
 	def place_forget(self):

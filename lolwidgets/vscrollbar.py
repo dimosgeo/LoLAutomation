@@ -1,16 +1,16 @@
 from tkinter import Frame, Button
-from lolwidgets.utils import Position
+from utils import Position
 
 
 class VerticalScrollBar(Frame):
-    def __init__(self, master, child_w, width: float = 16, pivotcolor: str = '#808080', *args, **kargs) -> None:
+    def __init__(self, master, child_w, width: float = 16, pivot_color: str = '#808080', *args, **kargs) -> None:
         Frame.__init__(self, master, *args, **kargs)
         self.width = width
         self.height = 0
         self.scroll_target = child_w
         self.button_height = 0
         self.ratio = 0
-        self.button = Button(self, width=self.width, bg=pivotcolor, borderwidth=0)
+        self.button = Button(self, width=self.width, bg=pivot_color, borderwidth=0)
         self.button_position = Position(x=0, y=0)
         self.child_position = Position(x=0, y=0)
         self.bind('<Button-1>', self.move_button)

@@ -1,4 +1,3 @@
-import time
 from queue import Queue
 from utils import utils
 import subprocess
@@ -15,6 +14,7 @@ class Backend:
         self.lol_handler.start()
         self.url = ''
         self.champion_id = -1
+        self.champion_skin = -1
         self.allRunes = None
         self.allSpells = None
         self.allItems = None
@@ -51,7 +51,7 @@ class Backend:
         self.primary_spell_f = not self.primary_spell_f
 
     def get_navigation_icons(self):
-        self.navigation_icons['lane_navigation'] = {lane : {'disabled': f'images/{lane}_disabled.png', 'enabled': f'images/{lane}.png'} for lane in utils.lanes}
+        self.navigation_icons['lane_navigation'] = {lane: {'disabled': f'images/{lane}_disabled.png', 'enabled': f'images/{lane}.png'} for lane in utils.lanes}
 
     def get_build(self):
         def BuildByLane(page, queueName):
@@ -62,7 +62,7 @@ class Backend:
             championLane['spells'] = [lolib.getImageFromUrl(self.url, self.allSpells[build['spells'][i]]['iconPath']) for i in range(2)]
             championLane['ability_order'] = build['abilities_order']
             championLane['runes'] = self.get_rune_mapping(build['runes'])
-            championLane['items'] = [[{'image': self.get_item_image(item), 'description': self.allItems[item]['iconDesc'], 'count': count} for item, count in zip(build['start_items'], build['start_items_n'])], [{'image': self.get_item_image(item), 'description': self.allItems[item]['iconDesc'], 'count': 1} for item in build['best_items']]] # TEST
+            championLane['items'] = [[{'image': self.get_item_image(item), 'description': self.allItems[item]['iconDesc'], 'count': count} for item, count in zip(build['start_items'], build['start_items_n'])], [{'image': self.get_item_image(item), 'description': self.allItems[item]['iconDesc'], 'count': 1} for item in build['best_items']]]  # TEST
             championLane['wr'] = build['wr']
             championLane['pr'] = build['pr']
             championLane['br'] = build['br']

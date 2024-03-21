@@ -50,7 +50,6 @@ class LoLHandler(Thread):
                 self.queue_out.put(Message('CHAMPION_PICKED'))
 
             if self.champion_locked and not lock_state:
-                lock_state = self.champion_locked
                 self.get_skin()
                 while not self.queue_out.empty():
                     self.queue_out.get()
@@ -75,7 +74,7 @@ class LoLHandler(Thread):
             status_code = r.status_code
             r = r.json()
         except requests.exceptions.RequestException as e:
-            print('Couldn\'t connect to the client server. Retrying in 2 seconds.')
+            print(f'Could not connect to the client server.{e}\nRetrying in 2 seconds.')
             time.sleep(2)
         return 'OPEN' if status_code == 200 and len(r) > 0 else 'CLOSED'
 

@@ -8,11 +8,11 @@ class RuneSheet(tk.Frame):
 		tk.Frame.__init__(self, parent, *args, **kwargs)
 		self.categories_space = categories_space
 		self.previous_active = [-1, -1]
-		self['bg'] = utils.widget_color
-		self.pages = [RuneFrame(self, page, keystone_size=keystone_size, rune_size=rune_size, horizontal_space=horizontal_space, is_primary=True, vertical_space=vertical_space, background=utils.widget_color) for page in rune_list[1:-1]]
-		self.main_categories = RuneHeaderFrame(self, rune_list=rune_list[0], size=categories_size, horizontal_space=horizontal_space, background=utils.widget_color)
-		self.secondary_categories = RuneHeaderFrame(self, rune_list=rune_list[0], size=categories_size, horizontal_space=horizontal_space, background=utils.widget_color)
-		self.small_runes = StatRunes(self, rune_list=rune_list[-1], rune_size=small_rune_size, horizontal_space=15, background=utils.widget_color)
+		self['bg'] = utils.colors['widget_highlight']
+		self.pages = [RuneFrame(self, page, keystone_size=keystone_size, rune_size=rune_size, horizontal_space=horizontal_space, is_primary=True, vertical_space=vertical_space, background=utils.colors['widget_highlight']) for page in rune_list[1:-1]]
+		self.main_categories = RuneHeaderFrame(self, rune_list=rune_list[0], size=categories_size, horizontal_space=horizontal_space, background=utils.colors['widget_highlight'])
+		self.secondary_categories = RuneHeaderFrame(self, rune_list=rune_list[0], size=categories_size, horizontal_space=horizontal_space, background=utils.colors['widget_highlight'])
+		self.small_runes = StatRunes(self, rune_list=rune_list[-1], rune_size=small_rune_size, horizontal_space=15, background=utils.colors['widget_highlight'])
 		self.width = self.main_categories.width + self.secondary_categories.width - self.secondary_categories.size + self.categories_space * 3
 		self.height = self.secondary_categories.size + self.pages[0].height - keystone_size + self.small_runes.height + categories_space * 1
 
@@ -117,7 +117,7 @@ class StatRunes(tk.Frame):
 		self.height = (self.rune_size + self.vertical_space) * len(rune_list)
 		rune_num = max((len(row) for row in rune_list))
 		self.width = rune_num * self.rune_size + (rune_num + 1) * self.horizontal_space
-		self.rune_buttons = [[RuneButton(parent=self, icon=rune, size=self.rune_size, bg=utils.widget_color) for rune in row] for row in rune_list]
+		self.rune_buttons = [[RuneButton(parent=self, icon=rune, size=self.rune_size, bg=utils.colors['widget_highlight']) for rune in row] for row in rune_list]
 	
 	def select_runes(self, runes):
 		for i, value in enumerate(self.previous_selected):

@@ -1,6 +1,5 @@
 import tkinter as tk
-from tkinter.font import Font
-from typing import Dict, Any
+from typing import Dict, Any, List, Callable
 from utils import utils
 from PIL import ImageTk, Image
 from lolwidgets.runepage import RuneSheet
@@ -8,28 +7,27 @@ from lolwidgets.championcard import ChampionFrame
 from lolwidgets.abilities import AbilitiesTable
 from lolwidgets.items import ItemBuildFrame
 from lolwidgets.skinchooser import SkinChooser
-from lolwidgets.utils import *
+from utils import Spacing
 
 
 class Build(tk.Frame):
-	def __init__(self, parent, vertical_space: int = 20, horizontal_space: float = 20, ability_cell_size: int = 40, champion_frame_size: int = 110, item_size: float = 64, control_bar_font_size: int = 16, *args, **kwargs) -> None:
+	def __init__(self, parent: tk.Misc, rune_icons: List[bytes], lane_navigation_icons: Dict[str, Dict[str, str]], client_setup_function: Callable[[Dict], None], set_skin_function: Callable[[int], None], swap_spell_function: Callable[[], None], vertical_space: int = 20, horizontal_space: int = 20, ability_cell_size: int = 40, champion_frame_size: int = 110, item_size: float = 64, *args, **kwargs) -> None:
 		tk.Frame.__init__(self, parent, *args, **kwargs)
 		self.champion = None
-		self.backend = self.winfo_toplevel().backend
 		self.spacing = Spacing(vertical=vertical_space, horizontal=horizontal_space)
-
-		self.rune_sheet = RuneSheet(self, self.backend.get_runes(), vertical_space=15)
+		self.rune_sheet = RuneSheet(self, rune_icons, vertical_space=15)
 		self.abilities = AbilitiesTable(self, cell_size=int((self.rune_sheet.width - ability_cell_size) / 19), border_size=2)
 		self.width = int(self.rune_sheet.width + self.abilities.width + self.spacing.horizontal * 3)
-		self.champion_frame = ChampionFrame(self, width=self.width, size=champion_frame_size, swap_function=self.backend.swap_spells, background=self['bg'])
-		self.data = ControlFrame(self, lane_navigation=self.backend.navigation_icons['lane_navigation'], width=self.rune_sheet.width, font_size=control_bar_font_size, func=self.select_lane, background=self['bg'])
+		self.champion_frame = ChampionFrame(self, width=self.width, size=champion_frame_size, swap_spell_function=swap_spell_function, background=self['bg'])
+		self.data = ControlFrame(self, lane_navigation=lane_navigation_icons, width=self.rune_sheet.width, func=self.select_lane, background=self['bg'])
 		
 		self.starting_items = ItemBuildFrame(self, title='Starting Items', width=self.rune_sheet.width, height=item_size, title_width=150, background=self['bg'])
 		self.full_build = ItemBuildFrame(self, title='Full Build', width=self.rune_sheet.width, height=item_size, title_width=150, background=self['bg'])
 
 		self.height = int(self.champion_frame.height + self.data.height + self.rune_sheet.height + vertical_space)
-		self.skins = SkinChooser(self, width=self.abilities.width, height=self.height - self.champion_frame.height - self.abilities.height - self.starting_items.height - self.full_build.height - 5 * self.spacing.vertical)
+		self.skins = SkinChooser(self, width=self.abilities.width, height=self.height - self.champion_frame.height - self.abilities.height - self.starting_items.height - self.full_build.height - 5 * self.spacing.vertical, pick_skin=set_skin_function)
 		self.previous_selected = ''
+		self.setup_client = client_setup_function
 	
 	def set_champion(self, champion: Dict[str, Any]) -> None:
 		self.champion = champion
@@ -53,7 +51,7 @@ class Build(tk.Frame):
 		self.data.select_lane(lane)
 		self.previous_selected = lane
 
-		self.backend.set_everything(self.champion['build'][lane][1])
+		self.setup_client(self.champion['build'][lane][1])
 
 	def place(self, x=0, y=0) -> None:
 		super().place(x=x, y=y, height=self.height, width=self.width)
@@ -87,10 +85,10 @@ class Build(tk.Frame):
 
 
 class ControlFrame(tk.Frame):
-	def __init__(self, parent, lane_navigation, width: float, font_size: int, horizontal_spacing: float = 20, func: callable = lambda *args: None, *args, **kwargs) -> None:
+	def __init__(self, parent, lane_navigation, width: float, horizontal_spacing: float = 20, func: callable = lambda *args: None, *args, **kwargs) -> None:
 		tk.Frame.__init__(self, parent, *args, **kwargs)
 		self.horizontal_spacing = horizontal_spacing
-		self.font = Font(size=font_size)
+		self.font = utils.fonts['normal']
 		self.height = self.font.metrics('linespace') * 2
 		self.width = width
 
@@ -162,7 +160,7 @@ class LaneFrame(tk.Frame):
 			self.button_list[self.previous_selected].set_active(False)
 			self.button_list[self.previous_selected]['bg'] = self['bg']
 		self.button_list[utils.lane_indexes[lane]].set_active(True)
-		self.button_list[utils.lane_indexes[lane]]['bg'] = utils.widget_color
+		self.button_list[utils.lane_indexes[lane]]['bg'] = utils.colors['widget_highlight']
 		self.previous_selected = utils.lane_indexes[lane]
 
 	def toggle_lane(self, lane: int) -> None:
