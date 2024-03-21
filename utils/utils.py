@@ -23,7 +23,7 @@ class Message:
 
 
 lane_indexes = {'top': 0, 'jungle': 1, 'mid': 2, 'adc': 3, 'support': 4, 'aram': 5}
-lanes = ['top', 'jungle', 'mid', 'adc', 'support']
+lanes = ('top', 'jungle', 'mid', 'adc', 'support')
 
 
 class Lane(enum.Enum):
