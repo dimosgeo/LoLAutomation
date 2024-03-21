@@ -6,19 +6,18 @@ from PIL import Image, ImageTk
 
 
 class ChampionFrame(Frame):
-	def __init__(self, parent: Widget, width: float = 0, size: float = 0, backend=None,  name_size: int = 26, spell_size: int = 65, horizontal_spacing: int = 15, *args, **kwargs) -> None:
+	def __init__(self, parent: Widget, width: float = 0, size: float = 0, swap_function=None,  name_size: int = 26, spell_size: int = 65, horizontal_spacing: int = 15, *args, **kwargs) -> None:
 		Frame.__init__(self, parent, *args, **kwargs)
 		self.width = width
 		self['bg'] = utils.palette[0]
 		self.spell_size = spell_size
-		self.backend = backend
 		self.height = size
 		self.spacing = Spacing(horizontal=horizontal_spacing)
 		self.champion_icon = None
 		self.champion_size = size - 10
 		self.champion_name = Label(self, text='', font=Font(family="Helvetica", size=name_size, weight="bold"), background=self['bg'], foreground='white', anchor='w')
 		self.champion_image = Button(self, background=self['bg'], activebackground=self['bg'], bd=0)
-		self.summonerSpellsFrame = SummonerSpellFrame(self, backend, size=self.spell_size, background=self['bg'])
+		self.summonerSpellsFrame = SummonerSpellFrame(self, swap_function, size=self.spell_size, background=self['bg'])
 
 	def set_champion(self, name: str, image) -> None:
 		self.champion_icon = ImageTk.PhotoImage(Image.open(image).resize((int(self.champion_size), int(self.champion_size))))
@@ -36,11 +35,11 @@ class ChampionFrame(Frame):
 
 
 class SummonerSpellFrame(Frame):
-	def __init__(self, parent, backend, size, horizontal_spacing=25, *args, **kwargs) -> None:
+	def __init__(self, parent, swap_function, size, horizontal_spacing=25, *args, **kwargs) -> None:
 		Frame.__init__(self, parent, *args, **kwargs)
 		self.spacing = Spacing(horizontal=horizontal_spacing)
 		self.height = size
-		self.backend = backend
+		self.swap_function = swap_function
 		self.images = []
 		self.spells = [Button(self, bd=0, bg=self['bg'], activebackground=self['bg']) for _ in range(2)]
 		self.swap_button_size = 20
@@ -62,7 +61,7 @@ class SummonerSpellFrame(Frame):
 
 	def swap_spells(self) -> None:
 		if hasattr(self.winfo_toplevel(), 'backend'):
-			self.backend.swap_spells()
+			self.swap_function()
 		self.images = self.images[::-1]
 		for spell, image in zip(self.spells, self.images):
 			spell['image'] = image

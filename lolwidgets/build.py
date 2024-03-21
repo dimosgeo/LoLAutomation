@@ -21,7 +21,7 @@ class Build(tk.Frame):
 		self.rune_sheet = RuneSheet(self, self.backend.get_runes(), vertical_space=15)
 		self.abilities = AbilitiesTable(self, cell_size=int((self.rune_sheet.width - ability_cell_size) / 19), border_size=2)
 		self.width = int(self.rune_sheet.width + self.abilities.width + self.spacing.horizontal * 3)
-		self.champion_frame = ChampionFrame(self, width=self.width, size=champion_frame_size, backend=self.backend, background=self['bg'])
+		self.champion_frame = ChampionFrame(self, width=self.width, size=champion_frame_size, swap_function=self.backend.swap_spells, background=self['bg'])
 		self.data = ControlFrame(self, lane_navigation=self.backend.navigation_icons['lane_navigation'], width=self.rune_sheet.width, font_size=control_bar_font_size, func=self.select_lane, background=self['bg'])
 		
 		self.starting_items = ItemBuildFrame(self, title='Starting Items', width=self.rune_sheet.width, height=item_size, title_width=150, background=self['bg'])
@@ -37,7 +37,6 @@ class Build(tk.Frame):
 		self.champion_frame.set_champion(champion['name'], champion['image'])
 		self.abilities.set_abilities(champion['abilities'])
 		self.select_lane(champion['default_lane'])
-		# self.skins.set_skins(self.backend.get_skins())
 
 	def set_skins(self, skins) -> None:
 		self.skins.set_skins(skins)
