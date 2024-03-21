@@ -75,7 +75,7 @@ class App(Tk):
 				self.add_build()
 				self.show_message_label()
 				if self.dev_mode:
-					self.backend.champion_id = 32#16
+					self.backend.champion_id = self.dev_mode#16
 					self.load_data()
 			if status == 'CHAMPION_PICKED':
 				self.status_label.place_forget()
