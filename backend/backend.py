@@ -156,5 +156,5 @@ class Backend:
 
     def get_skins(self):
         if self.dev_mode:
-            return []
+            return {"selectedSkinId": -1, "availableSkins": []}
         return lolib.getSkins(self.url)

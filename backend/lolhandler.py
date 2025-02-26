@@ -13,7 +13,7 @@ class LoLHandler(Thread):
         self.loop = True
         self.champion_id = -1
         self.champion_locked = False
-        self.current_skin = 0
+        self.current_skin = -1
         self.client_state = 'CLOSED'
         self.server_state = 'CLOSED'
         self.url = ''
@@ -79,7 +79,7 @@ class LoLHandler(Thread):
         return 'OPEN' if status_code == 200 and len(r) > 0 else 'CLOSED'
 
     def get_champion_picked(self):
-        result = lolib.getCurrentchampion(self.url)
+        result = lolib.getCurrentChampion(self.url)
         self.champion_id = result[0]
         self.champion_locked = result[1]
 

@@ -9,16 +9,16 @@ from PIL import Image, ImageTk
 
 
 class App(Tk):
-	def __init__(self, development_mode=False):
+	def __init__(self, development_mode: bool = False):
 		Tk.__init__(self)
 		self.dev_mode = development_mode
 		self.start = time.time()
+		utils.init_fonts()
 		self.title('LOL Assistant')
 		self.protocol("WM_DELETE_WINDOW", self.on_closing)
 		self.configure(bg=utils.colors['background'])
 		self.bind("<Configure>", self.events_handler)
 		self.resizable(width=False, height=False)
-		utils.init_fonts()
 		self.icon = ImageTk.PhotoImage(Image.open('images/icon.png'))
 		self.iconbitmap(default='images/icon.png')
 		self.backend = Backend(self.dev_mode)
@@ -45,7 +45,7 @@ class App(Tk):
 		self.lolListener.start()
 		print(f'Start time: {time.time() - self.start}')
 
-	def add_build(self):
+	def add_build(self) -> None:
 		self.navigation_images = self.backend.get_navigation_icons()
 		self.build = Build(self, background=utils.colors['background'], rune_icons=self.backend.get_runes(), lane_navigation_icons=self.backend.navigation_icons['lane_navigation'], client_setup_function=self.backend.set_everything, set_skin_function=self.backend.set_active_skin, swap_spell_function=self.backend.swap_spells)
 		self.width = self.build.width
@@ -54,13 +54,13 @@ class App(Tk):
 		self.geometry(alignstr)
 		self.scrollbar = VerticalScrollBar(self, width=16, background=utils.colors['background'], child_w=self.build)
 
-	def get_ping(self):
+	def get_ping(self) -> None:
 		self.ping['text'] = self.backend.ping()
 		self.ping.place(x=self.winfo_width() - self.ping.width - self.padding.right, y=self.winfo_height() - self.ping.height - self.padding.bottom)
 		self.ping.lift()
 		self.after(1000, self.get_ping)
 
-	def lol_listener(self):
+	def lol_listener(self) -> None:
 		self.show_message_label()
 		while True:
 			message = self.backend.get_status()
@@ -92,7 +92,7 @@ class App(Tk):
 	def show_message_label(self):
 		self.status_label.place(x=0, y=0, width=self.width, height=self.height)
 
-	def events_handler(self, event):
+	def events_handler(self, event) -> None:
 		if event.widget == self and (self.winfo_width() != self.width or self.winfo_height() != self.height):
 			if self.build is not None and self.build.winfo_ismapped():
 				self.build.place(x=0, y=self.padding.top)
@@ -103,7 +103,7 @@ class App(Tk):
 			self.width = self.winfo_width()
 			self.height = self.winfo_height()
 
-	def load_data(self):
+	def load_data(self) -> None:
 		self.build.set_champion(self.backend.get_build())
 
 	def show_data(self) -> None:
@@ -113,7 +113,7 @@ class App(Tk):
 	def show_skins(self) -> None:
 		self.build.set_skins(self.backend.get_skins())
 
-	def on_closing(self):
+	def on_closing(self) -> None:
 		self.backend.close()
 		self.destroy()
 

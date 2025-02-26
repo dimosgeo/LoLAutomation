@@ -41,7 +41,7 @@ class SkinChooser(tk.Frame):
 
 	def set_skins(self, skins_list) -> None:
 		self.place_forget_tiles()
-		if not len(skins_list):
+		if not skins_list['availableSkins']:
 			return
 		self.skins = dict()
 		self.skin_list = []
