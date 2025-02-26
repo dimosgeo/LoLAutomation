@@ -230,11 +230,16 @@ def getCurrentChampion(url):
 	path = url+"/lol-champ-select/v1/session/"
 	r = requests.get(path, verify=False).json()
 
-	cell_id = r.get('localPlayerCellId',-1)
+	cell_id = r.get('localPlayerCellId', -1)
 	if cell_id != -1:
-		for player in r['myTeam']:
-			if player['cellId'] == cell_id:
-				return player['championId'],player['championId']!=0
+		if r['actions']:
+			for player in r['actions'][0]:
+				if player['actorCellId'] == cell_id:
+					return player['championId'], player['completed']
+		else:
+			for player in r['myTeam']:
+				if player['cellId'] == cell_id:
+					return player['championId'], True
 
 	return -1, False
 
@@ -273,27 +278,23 @@ def getFullRunePageImages(url):
 
 def getSkins(url):
 	path = url+"/lol-champ-select/v1/skin-selector-info"
-	result = {"selectedSkinId": -1, "availableSkins": []}
-	try:
-		selected = requests.get(path, verify=False).json()
-		selectedChampion = selected['selectedChampionId']
-		result['selectedSkinId'] = selected['selectedSkinId']
+	selected = requests.get(path, verify=False).json()
+	selectedChampion = selected['selectedChampionId']
+	selectedSkin = selected['selectedSkinId']
 
-		path = url+"/lol-champ-select/v1/pickable-skin-ids"
-		all_skins = requests.get(path, verify=False).json()
+	path = url+"/lol-champ-select/v1/pickable-skin-ids"
+	all_skins = requests.get(path, verify=False).json()
 
-		path = url+f"/lol-game-data/assets/v1/champions/{selectedChampion}.json"
-		skins = requests.get(path, verify=False).json()['skins']
-		result['availableSkins'] = {skin['id']: getImageFromUrl(url,skin['uncenteredSplashPath']) for skin in skins if skin['id'] in all_skins or skin['isBase']}
-	except Exception as e:
-		print(e)
-	return result
+	path = url+f"/lol-game-data/assets/v1/champions/{selectedChampion}.json"
+	skins = requests.get(path, verify=False).json()['skins']
+	availableSkins = {skin['id']: getImageFromUrl(url,skin['uncenteredSplashPath']) for skin in skins if skin['id'] in all_skins or skin['isBase']}
+	
+	return {"selectedSkinId": selectedSkin, "availableSkins": availableSkins}
 
 
 def main():
 	url = get_client_url()
-	print(url)
-	# getFullRunePageImages(url)
+	getFullRunePageImages(url)
 	# getRunes(url)
 	# print(getItems(url))
 
