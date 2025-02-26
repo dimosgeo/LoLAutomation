@@ -234,7 +234,7 @@ def getCurrentChampion(url):
 	if cell_id != -1:
 		for player in r['myTeam']:
 			if player['cellId'] == cell_id:
-				return player['championId'], player['championId'] != 0
+				return player['championId'],player['championId']!=0
 
 	return -1, False
 
@@ -283,11 +283,10 @@ def getSkins(url):
 		all_skins = requests.get(path, verify=False).json()
 
 		path = url+f"/lol-game-data/assets/v1/champions/{selectedChampion}.json"
-		print(path)
 		skins = requests.get(path, verify=False).json()['skins']
-		result['availableSkins'] = {skin['id']: getImageFromUrl(url, skin['uncenteredSplashPath']) for skin in skins if skin['id'] in all_skins or skin['isBase']}
+		result['availableSkins'] = {skin['id']: getImageFromUrl(url,skin['uncenteredSplashPath']) for skin in skins if skin['id'] in all_skins or skin['isBase']}
 	except Exception as e:
-		print(f'Error: {e}')
+		print(e)
 	return result
 
 

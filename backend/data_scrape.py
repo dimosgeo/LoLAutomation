@@ -87,7 +87,7 @@ def get_rates(tree, data_dict, queue):
 	elif queue == 'urf':
 		data_dict['wr'] = float(tree.xpath('//*[@id="splash-content"]/div[2]/span/div/span[2]/span')[0].text_content()[:-1])
 		data_dict['pr'] = float(tree.xpath('//*[@id="splash-content"]/div[2]/span/div/span[3]/span')[0].text_content()[:-1])
-		data_dict['br'] = float(tree.xpath('//*[@id="splash-content"]/div[2]/span/div/span[4]/span')[0].text_content()[:-1])
+		data_dict['br'] = 0
 	else:
 		data_dict['wr'] = 0
 		data_dict['pr'] = 0
