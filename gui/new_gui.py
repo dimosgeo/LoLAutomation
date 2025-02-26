@@ -77,9 +77,9 @@ class App(Tk):
 					self.show_data()
 			if status == 'CHAMPION_PICKED':
 				self.load_data()
+				self.show_data()
 			if status == 'CHAMPION_LOCKED':
 				self.status_label.place_forget()
-				self.show_data()
 				self.show_skins()
 			if status == 'GAME_CLOSED':
 				self.status_label['text'] = 'Waiting for client to open'

@@ -235,7 +235,7 @@ def getCurrentChampion(url):
 		if r['actions']:
 			for player in r['actions'][0]:
 				if player['actorCellId'] == cell_id:
-					return player['championId'], player['completed'] or player['championId']
+					return player['championId'], player['completed']
 		else:
 			for player in r['myTeam']:
 				if player['cellId'] == cell_id:
@@ -291,7 +291,7 @@ def getSkins(url):
 		skins = requests.get(path, verify=False).json()['skins']
 		result['availableSkins'] = {skin['id']: getImageFromUrl(url,skin['uncenteredSplashPath']) for skin in skins if skin['id'] in all_skins or skin['isBase']}
 	except Exception as e:
-		print(e)
+		print(f'Error: {e}')
 	return result
 
 
