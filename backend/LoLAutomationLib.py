@@ -230,11 +230,16 @@ def getCurrentChampion(url):
 	path = url+"/lol-champ-select/v1/session/"
 	r = requests.get(path, verify=False).json()
 
-	cell_id = r.get('localPlayerCellId',-1)
+	cell_id = r.get('localPlayerCellId', -1)
 	if cell_id != -1:
-		for player in r['myTeam']:
-			if player['cellId'] == cell_id:
-				return player['championId'],player['championId']!=0
+		if r['actions']:
+			for player in r['actions'][0]:
+				if player['actorCellId'] == cell_id:
+					return player['championId'], player['completed'] or player['championId']
+		else:
+			for player in r['myTeam']:
+				if player['cellId'] == cell_id:
+					return player['championId'], True
 
 	return -1, False
 
