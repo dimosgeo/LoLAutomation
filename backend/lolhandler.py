@@ -49,7 +49,7 @@ class LoLHandler(Thread):
             if self.champion_id > 0 and self.champion_id != previous_champion:
                 self.queue_out.put(Message('CHAMPION_PICKED'))
 
-            if self.champion_locked and not lock_state:
+            if self.champion_locked and (self.champion_id != previous_champion or self.champion_locked != lock_state):
                 self.get_skin()
                 while not self.queue_out.empty():
                     self.queue_out.get()
