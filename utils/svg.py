@@ -1,5 +1,5 @@
 import io
-import lxml.etree as ET
+import lxml.etree as et
 from matplotlib import use as mplot_use
 mplot_use('svg')
 import matplotlib.pyplot as plt
@@ -9,7 +9,7 @@ from matplotlib.patches import PathPatch, Polygon, Ellipse
 
 class SVG:
     def __init__(self, tree):
-        self.tree = ET.fromstring(tree)
+        self.tree = et.fromstring(tree)
         self.viewbox = [0, 0, 0, 0]
         self.paths = []
         self.make_paths()

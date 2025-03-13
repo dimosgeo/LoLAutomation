@@ -3,7 +3,7 @@ import utils
 
 
 class PingLabel(tk.Label):
-    def __init__(self, parent, font_size: int = 10, *args, **kwargs):
+    def __init__(self, parent, *args, **kwargs):
         tk.Label.__init__(self, parent, *args, **kwargs)
         self.font = utils.fonts['small_bold']
         self['font'] = self.font
