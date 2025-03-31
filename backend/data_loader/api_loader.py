@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Optional
 
-from model.utils.LoLAutomationLib import LoLAdapter
+from backend.utils.LoLAutomationLib import LoLAdapter
 
 
 class APILoader(ABC):

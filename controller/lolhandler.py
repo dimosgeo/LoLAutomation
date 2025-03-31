@@ -1,9 +1,8 @@
 import time
-from utils import Message, StatusType
+from utils import Message, StatusType, ServerStatus, ClientStatus
 from threading import Thread
-import requests.exceptions
 from queue import Queue
-from model.utils.LoLAutomationLib import LoLAdapter, getClientStatus
+from backend.utils.LoLAutomationLib import LoLAdapter, getClientStatus
 from typing import Optional
 
 
@@ -16,8 +15,8 @@ class LoLHandler(Thread):
         self.champion_id = -1
         self.champion_locked = False
         self.current_skin = -1
-        self.client_state = 'CLOSED'
-        self.server_state = 'CLOSED'
+        self.client_state = ClientStatus.CLOSED
+        self.server_state = ServerStatus.CLOSED
 
     def run(self):
         while self.loop:
@@ -28,22 +27,22 @@ class LoLHandler(Thread):
             previous_skin = self.current_skin
             self.check_client_status()
 
-            if self.client_state == 'CLOSED' and previous_state == 'OPEN':
+            if self.client_state == ClientStatus.CLOSED and previous_state == ClientStatus.OPEN:
                 self.queue_out.put(Message(StatusType.GAME_CLOSED))
-                self.server_state = 'CLOSED'
+                self.server_state = ServerStatus.CLOSED
                 self.champion_id = -1
 
-            if self.client_state == 'OPEN' and previous_state == 'CLOSED':
+            if self.client_state == ClientStatus.OPEN and previous_state == ClientStatus.CLOSED:
                 self.lol_adapter = LoLAdapter()
 
-            if self.client_state == 'OPEN' and self.server_state == 'CLOSED':
-                self.server_state = self.check_server_status()
+            if self.client_state == ClientStatus.OPEN and self.server_state == ClientStatus.CLOSED:
+                self.check_server_status()
 
-            if self.server_state == 'OPEN' and previous_server_state == 'CLOSED':
+            if self.server_state == ClientStatus.OPEN and previous_server_state == ClientStatus.CLOSED:
                 print(f'Server is open at: {self.lol_adapter.url}')
                 self.queue_out.put(Message(StatusType.GAME_OPENED))
 
-            if self.server_state == 'OPEN':
+            if self.server_state == ServerStatus.OPEN:
                 self.get_champion_picked()
 
             if self.champion_id > 0 and self.champion_id != previous_champion:
@@ -67,16 +66,9 @@ class LoLHandler(Thread):
         self.loop = False
 
     def check_server_status(self):
-        r = []
-        status_code = -1
-        try:
-            r = requests.get(self.lol_adapter.url + "/lol-perks/v1/styles", verify=False)
-            status_code = r.status_code
-            r = r.json()
-        except requests.exceptions.RequestException as e:
-            print(f'Could not connect to the client server.{e}\nRetrying in 2 seconds.')
+        self.server_state = self.lol_adapter.check_server_status()
+        if self.server_state != ServerStatus.OPEN:
             time.sleep(2)
-        return 'OPEN' if status_code == 200 and len(r) > 0 else 'CLOSED'
 
     def get_champion_picked(self):
         result = self.lol_adapter.getCurrentChampion()
@@ -84,7 +76,7 @@ class LoLHandler(Thread):
         self.champion_locked = result[1]
 
     def check_client_status(self):
-        self.client_state = 'OPEN' if getClientStatus() else 'CLOSED'
+        self.client_state = getClientStatus()
 
     def get_skin(self):
         self.current_skin = self.lol_adapter.getSkins()['selectedSkinId']

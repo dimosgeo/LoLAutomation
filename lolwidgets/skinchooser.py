@@ -17,7 +17,7 @@ class SkinChooser(tk.Frame):
 		self.scroll = 0
 		self.selected_id = -1
 		self.image_length = 0
-		# self.winfo_toplevel().model.set_active_skin
+		# self.winfo_toplevel().backend.set_active_skin
 		self.pick_skin = pick_skin
 
 	def place(self, x=0, y=0):
@@ -112,7 +112,7 @@ class SkinButton(tk.Button):
 	# 	self.parent.scroll_listener(e)
 
 	# def select_skin(self):
-	# 	self.winfo_toplevel().model.set_active_skin(self.skin_id)
+	# 	self.winfo_toplevel().backend.set_active_skin(self.skin_id)
 
 	def pick_skin(self):
 		self.clear_skins()

@@ -1,6 +1,6 @@
 from typing import Dict
-import model.utils.data_scrape as ds
-from model.data_loader import APILoader
+import backend.utils.data_scrape as ds
+from backend.data_loader import APILoader
 from utils import Lanes
 from time import time
 

@@ -53,6 +53,16 @@ class StatusType(Enum):
 	PROCESS_CLOSED = 'PROCESS_CLOSED'
 
 
+class ServerStatus(Enum):
+	OPEN = 'OPEN'
+	CLOSED = 'CLOSED'
+
+
+class ClientStatus(Enum):
+	OPEN = 'OPEN'
+	CLOSED = 'CLOSED'
+
+
 @dataclass
 class Message:
 	message_type: StatusType = StatusType.EMPTY

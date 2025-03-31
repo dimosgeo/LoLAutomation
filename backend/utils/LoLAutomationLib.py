@@ -5,6 +5,7 @@ import socket
 import io
 import argparse
 from utils.svg import SVG
+from utils import ServerStatus, ClientStatus
 import aiohttp
 import asyncio
 import platform
@@ -61,7 +62,7 @@ def get_client_url(process_name="LeagueClientUx.exe"):
 def getClientStatus(process_name="LeagueClientUx.exe"):
 	pythoncom.CoInitialize()
 	client = wmi.WMI().Win32_Process(name=process_name)
-	return len(client) != 0
+	return ClientStatus.OPEN if len(client) != 0 else ClientStatus.CLOSED
 
 
 class LoLAdapter:
@@ -357,6 +358,17 @@ class LoLAdapter:
 		except Exception as e:
 			print(f'Error: {e}')
 		return result
+
+	def check_server_status(self):
+		r = []
+		status_code = -1
+		try:
+			r = requests.get(self.url + '/lol-perks/v1/styles', verify=False)
+			status_code = r.status_code
+			r = r.json()
+		except requests.exceptions.RequestException as e:
+			print(f'Could not connect to the client server.{e}\nRetrying in 2 seconds.')
+		return ServerStatus.OPEN if status_code == 200 and len(r) > 0 else ServerStatus.CLOSED
 
 
 def main():

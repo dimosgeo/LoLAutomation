@@ -6,7 +6,7 @@ from PIL import Image, ImageTk
 
 
 class ChampionFrame(Frame):
-	def __init__(self, parent: Misc, width: int = 0, size: int = 0, swap_spell_function: Callable[[], None] = None, name_size: int = 26, spell_size: int = 65, horizontal_spacing: int = 15, *args, **kwargs) -> None:
+	def __init__(self, parent: Misc, width: int = 0, size: int = 0, swap_spell_function: Callable[[], None] = None, spell_size: int = 65, horizontal_spacing: int = 15, *args, **kwargs) -> None:
 		Frame.__init__(self, parent, *args, **kwargs)
 		self.width = width
 		self['bg'] = utils.colors['background_widget']

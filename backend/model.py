@@ -1,7 +1,6 @@
-from model.data_loader import APILoader, MetasrcLoader
-from model.utils.LoLAutomationLib import LoLAdapter
+from backend.data_loader import APILoader, MetasrcLoader
+from backend.utils.LoLAutomationLib import LoLAdapter
 from utils import Lanes
-import subprocess  # REMOVE
 from typing import Dict, Optional
 
 
@@ -15,7 +14,7 @@ class Model:
 
     def init_data(self):
         self.lol_adapter = LoLAdapter()
-        self.api_handler = MetasrcLoader(self.lol_adapter, self.dev_mode)
+        self.api_handler = MetasrcLoader()
         self.load_navigation_icons()
 
     def get_runes(self):
@@ -32,11 +31,6 @@ class Model:
     def get_build(self, champion_id):
         return self.api_handler.get_build(champion_id)
 
-    @staticmethod
-    def ping() -> str:  # REMOVE
-        cmd_ping = subprocess.Popen(["ping.exe", "72.52.10.14", "-n", "1"], stdout=subprocess.PIPE)  # REMOVE
-        return cmd_ping.communicate()[0].decode('utf8').replace("\r", "").strip().split("\n")[-1].split(",")[1].split("=")[1][:-2]  # REMOVE
-
     def set_client_data(self, champion):
         if not self.primary_spell_f:
             self.lol_adapter.setSpells(champion['spells'][::-1])
@@ -51,7 +45,7 @@ class Model:
 
     def get_skins(self):
         if self.dev_mode:
-            return {"selectedSkinId": -1, "availableSkins": []}
+            return {'selectedSkinId': -1, 'availableSkins': []}
         return self.lol_adapter.getSkins()
 
     def get_lane_navigation_icons(self) -> Dict[str, Dict[str, str]]:

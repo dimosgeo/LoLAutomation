@@ -10,7 +10,7 @@ from matplotlib.patches import PathPatch, Polygon, Ellipse
 class SVG:
     def __init__(self, tree):
         self.tree = et.fromstring(tree)
-        self.viewbox = [0, 0, 0, 0]
+        self.view_box = [0, 0, 0, 0]
         self.paths = []
         self.make_paths()
 
@@ -174,7 +174,7 @@ class SVG:
             border = 'none' if data['stroke'] == 'transparent' else data['stroke']
 
         data = data['points'].replace(' ', ',').split(',')
-        self.paths.append(Polygon([(float(i), -float(j)) for i, j in zip(data[0::2], data[1::2])], closed=True, facecolor=fill, edgecolor=border))
+        self.paths.append(Polygon([[float(i), -float(j)] for i, j in zip(data[0::2], data[1::2])], closed=True, facecolor=fill, edgecolor=border))
 
     def parse_ellipse(self, data, fill='#000000', border='#000000'):
         cx = float(data['cx'])
@@ -207,10 +207,10 @@ class SVG:
                 self.parse_ellipse(element.attrib, fill)
 
         if 'viewBox' in self.tree.attrib:
-            self.viewbox = [float(i) for i in self.tree.attrib.get('viewBox').split()]
+            self.view_box = [float(i) for i in self.tree.attrib.get('viewBox').split()]
         elif 'width' in self.tree.attrib and 'height' in self.tree.attrib:
-            self.viewbox[2] = float(self.tree.attrib['width'])
-            self.viewbox[3] = float(self.tree.attrib['height'])
+            self.view_box[2] = float(self.tree.attrib['width'])
+            self.view_box[3] = float(self.tree.attrib['height'])
     
     def set(self, **args):
         for path in self.paths:
@@ -223,8 +223,8 @@ class SVG:
             ax.add_patch(path)
         ax.set_aspect('equal')
 
-        plt.xlim([self.viewbox[0], self.viewbox[2]])
-        plt.ylim([-self.viewbox[3], self.viewbox[1]])
+        plt.xlim([self.view_box[0], self.view_box[2]])
+        plt.ylim([-self.view_box[3], self.view_box[1]])
         plt.axis('off')
         img_buf = io.BytesIO()
         plt.savefig(img_buf, bbox_inches='tight', transparent=transparent, format=image_format)

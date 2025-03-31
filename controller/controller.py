@@ -1,6 +1,6 @@
 from threading import Thread
-from model import Model
-from controller import LoLHandler
+from backend import Model
+from controller.lolhandler import LoLHandler
 from typing import Optional, Dict
 from utils import StatusType, init_fonts
 from time import time
